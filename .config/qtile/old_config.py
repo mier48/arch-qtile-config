@@ -24,20 +24,14 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-from libqtile import bar, layout, widget, hook
+from libqtile import bar, layout, widget
 from libqtile.config import Click, Drag, Group, Key, Match, Screen
 from libqtile.lazy import lazy
 from libqtile.utils import guess_terminal
-from os import path
-
-import subprocess
-
-@hook.subscribe.startup_once
-def autostart():
-    subprocess.call([path.join(path.expanduser("~"), '.config', 'qtile', 'autostart.sh')])
 
 mod = "mod4"
 #terminal = guess_terminal()
+terminal = "alacritty"
 
 keys = [
     # A list of available commands that can be bound to keys can be found
@@ -58,8 +52,8 @@ keys = [
     # will be to screen edge - window would shrink.
     Key([mod, "control"], "h", lazy.layout.grow_left(), desc="Grow window to the left"),
     Key([mod, "control"], "l", lazy.layout.grow_right(), desc="Grow window to the right"),
-    Key([mod, "control"], "j", lazy.layout.grow_down(), desc="Grow window down"),
-    Key([mod, "control"], "k", lazy.layout.grow_up(), desc="Grow window up"),
+    Key([mod, "control"], "k", lazy.layout.grow_down(), desc="Grow window down"),
+    Key([mod, "control"], "j", lazy.layout.grow_up(), desc="Grow window up"),
     Key([mod], "n", lazy.layout.normalize(), desc="Reset all window sizes"),
     # Toggle between split and unsplit sides of stack.
     # Split = all windows displayed
@@ -71,7 +65,7 @@ keys = [
         lazy.layout.toggle_split(),
         desc="Toggle between split and unsplit sides of stack",
     ),
-    Key([mod], "Return", lazy.spawn("alacritty"), desc="Launch Terminal"),
+    Key([mod], "Return", lazy.spawn(terminal), desc="Launch terminal"),
     # Toggle between different layouts as defined below
     Key([mod], "Tab", lazy.next_layout(), desc="Toggle between layouts"),
     Key([mod], "w", lazy.window.kill(), desc="Kill focused window"),
@@ -80,14 +74,24 @@ keys = [
     Key([mod], "r", lazy.spawncmd(), desc="Spawn a command using a prompt widget"),
 
     # Apps
+    Key([mod], "a", lazy.spawn("android-studio")),
     Key([mod], "b", lazy.spawn("firefox")),
-    Key([mod], "v", lazy.spawn("code")),
+    Key([mod], "c", lazy.spawn("code")),
+
+    # File Explorer
+    Key([mod], 'e', lazy.spawn("Thunar")),
 
     # Menu
     Key([mod], "m", lazy.spawn("rofi -show run")),
-    Key([mod, "shift"], "m", lazy.spawn("rofi -show")),
+    Key([mod, 'shift'], "m", lazy.spawn("rofi -show")),
 
-    # Volumen
+    # Screenshot
+    Key([mod], "s", lazy.spawn("scrot")),
+    Key([mod, "shift"], "s", lazy.spawn("scrot -s")),
+    #([mod], "s", lazy.spawn("scrot")),
+    #([mod, "shift"], "s", lazy.spawn("scrot -s")),
+
+    # Volume
     Key([], "XF86AudioLowerVolume", lazy.spawn(
         "pactl set-sink-volume @DEFAULT_SINK@ -5%"
     )),
@@ -98,13 +102,24 @@ keys = [
         "pactl set-sink-mute @DEFAULT_SINK@ toggle"
     )),
 
-    # Brillo
+    # Brightness
     Key([], "XF86MonBrightnessUp", lazy.spawn("brightnessctl set +10%")),
     Key([], "XF86MonBrightnessDown", lazy.spawn("brightnessctl set 10%-")),
 ]
 
+#groups = [Group(i) for i in "123456789"]
 groups = [Group(i) for i in ["  ", "  ", " ", " "]]
-#
+
+
+for i, group in enumerate(groups):
+    actual_key = str(i + 1)
+    keys.extend([
+        # Switch to workspace N
+        Key([mod], actual_key, lazy.group[group.name].toscreen()),
+        # Send window to workspace N
+        Key([mod, "shift"], actual_key, lazy.window.togroup(group.name))
+    ])
+
 #for i in groups:
 #    keys.extend(
 #        [
@@ -129,16 +144,6 @@ groups = [Group(i) for i in ["  ", "  ", " ", " "]]
 #        ]
 #    )
 
-for i, group in enumerate(groups):
-    actual_key = str(i + 1)
-    keys.extend([
-        # Switch to workspace N
-        Key([mod], actual_key, lazy.group[group.name].toscreen()),
-        # Send window to workspace N
-        Key([mod, "shift"], actual_key, lazy.window.togroup(group.name))
-    ])
-
-
 layout_conf = {
     'border_focus': "ff6188",
     'border_width': 1,
@@ -162,11 +167,14 @@ layouts = [
 ]
 
 widget_defaults = dict(
-    font="UbuntuMono Nerd Font Bold",
+    font='mononoki Nerd Font',
     fontsize=14,
     padding=1,
 )
 extension_defaults = widget_defaults.copy()
+
+#screens = [Screen(top=status_bar(primary_widgets))]
+#xrandr = "xrandr | grep -w 'connected' | cut -d ' ' -f 2 | wc -l"
 
 screens = [
     Screen(
@@ -175,7 +183,7 @@ screens = [
                 widget.GroupBox(
                     foreground="#f1ffff",
                     background="#0f101a",
-                    font='UbuntuMono Nerd Font',
+                    font='mononoki Nerd Font',
                     fontsize=20,
                     margin_y=3,
                     margin_x=0,
@@ -214,7 +222,7 @@ screens = [
                     foreground=["#ab9df2", "#ab9df2"],
                     text="",
                     fontsize=37,
-                    padding=-3
+                    padding=-4
                 ),
                 widget.TextBox(
                     text=" ",
@@ -240,7 +248,7 @@ screens = [
                     foreground=["#ff6188", "#ff6188"],
                     text="",
                     fontsize=37,
-                    padding=-3
+                    padding=-4
                 ),
                 widget.TextBox(
                     text=" ",
@@ -261,7 +269,7 @@ screens = [
                     foreground=["#ffd866", "#ffd866"],
                     text="",
                     fontsize=37,
-                    padding=-3
+                    padding=-4
                 ),
                 widget.CurrentLayoutIcon(
                     background=["#ffd866", "#ffd866"],
@@ -281,7 +289,7 @@ screens = [
                     foreground=["#a9dc76", "#a9dc76"],
                     text="",
                     fontsize=37,
-                    padding=-3
+                    padding=-4
                 ),
                 widget.TextBox(
                     text="'",
@@ -304,19 +312,80 @@ screens = [
                 widget.Systray(
                     background=["#0f101a", "#0f101a"],
                 ),
-                #widget.TextBox("default config", name="default"),
-                #widget.Wlan(),
-                #widget.Battery(format='{percent:2.0%} {char}'),
-                #widget.QuickExit(),
-                #widget.Chord(
-                #    chords_colors={
-                #        "launch": ("#ff0000", "#ffffff"),
-                #    },
-                #    name_transform=lambda name: name.upper(),
+                #widget.GroupBox(
+                #    foreground="#f1ffff",
+                #    background="#0f101a",
+                #    fontsize=20,
+                #    margin_y=3,
+                #    margin_x=0,
+                #    padding_y=8,
+                #    padding_x=5,
+                #    borderwidth=1,
+                #    active="#f1ffff",
+                #    inactive="#f1ffff",
+                #    rounded=False,
+                #    highlight_method='block',
+                #    urgent_alert_method='block',
+                #    urgent_border="#F07178",
+                #    this_current_screen_border="#a151d3",
+                #    this_screen_border="#353c4a",
+                #    other_current_screen_border="#0f101a",
+                #    other_screen_border="#0f101a",
+                #    disable_drag=True
                 #),
-                #widget.TextBox("Press &lt;M-r&gt; to spawn", foreground="#d75f5f"),
-                # NB Systray is incompatible with Wayland, consider using StatusNotifier instead
-                # widget.StatusNotifier(),
+                #widget.Sep(
+                #    linewidth=0,
+                #    padding=5,
+                #),
+                #widget.WindowName(
+                #    fontsize=14,
+                #),
+                #widget.Sep(
+                #    linewidth=0,
+                #    padding=5,
+                #),
+                #widget.KhalCalendar(),
+                #widget.CapsNumLockIndicator(),
+                #widget.CheckUpdates(
+                #    colour_no_updates=["#ffffff", "#ffffff"],
+                #    colour_have_updates=["#ffffff", "#ffffff"],
+                #    no_update_string='0',
+                #    display_format='{updates}',
+                #    update_interval=1800,
+                #    custom_command='checkupdates',
+                #),
+                #widget.Sep(
+                #    linewidth=0,
+                #    padding=5,
+                #),
+                #widget.Net(
+                #),
+                #widget.Sep(
+                #    linewidth=0,
+                #    padding=5,
+                #),
+                #widget.CurrentLayoutIcon(
+                #    scale=0.65
+                #),
+                #widget.CurrentLayout(
+                #),
+                #widget.Clock(format='%d/%m/%Y - %H:%M'),
+                #widget.Sep(
+                #    linewidth=0,
+                #    padding=5,
+                #),
+                #widget.ThermalSensor(
+                #    format='{temp:.0f}{unit}', 
+                #),
+                #widget.Memory(measure_mem='G'),
+                #widget.CPU(),
+                #widget.Bluetooth(),
+                #widget.Volume(
+                #    emoji=True,
+                #    fmt='Vol: {}'
+                #),
+                #widget.Battery(format='{percent:2.0%}'),
+                #widget.Systray(),
             ],
             26,
             opacity=0.95
@@ -338,17 +407,29 @@ dgroups_app_rules = []  # type: list
 follow_mouse_focus = True
 bring_front_click = False
 cursor_warp = False
+#floating_layout = layout.Floating(
+#    float_rules=[
+#        # Run the utility of `xprop` to see the wm class and name of an X client.
+#        *layout.Floating.default_float_rules,
+#        Match(wm_class="confirmreset"),  # gitk
+#        Match(wm_class="makebranch"),  # gitk
+#        Match(wm_class="maketag"),  # gitk
+#        Match(wm_class="ssh-askpass"),  # ssh-askpass
+#        Match(title="branchdialog"),  # gitk
+#        Match(title="pinentry"),  # GPG key password entry
+#    ]
+#)
 floating_layout = layout.Floating(
     float_rules=[
-        # Run the utility of `xprop` to see the wm class and name of an X client.
         *layout.Floating.default_float_rules,
-        Match(wm_class="confirmreset"),  # gitk
-        Match(wm_class="makebranch"),  # gitk
-        Match(wm_class="maketag"),  # gitk
-        Match(wm_class="ssh-askpass"),  # ssh-askpass
-        Match(title="branchdialog"),  # gitk
-        Match(title="pinentry"),  # GPG key password entry
-    ], border_focus="#a151d3"
+        Match(wm_class='confirmreset'),
+        Match(wm_class='makebranch'),
+        Match(wm_class='maketag'),
+        Match(wm_class='ssh-askpass'),
+        Match(title='branchdialog'),
+        Match(title='pinentry'),
+    ],
+    border_focus='#a151d3'
 )
 auto_fullscreen = True
 focus_on_window_activation = "smart"
