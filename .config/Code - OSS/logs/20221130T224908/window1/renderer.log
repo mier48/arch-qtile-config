@@ -1,0 +1,267 @@
+2022-11-30 22:49:12.164 [error] [tht13.python]: 'configuration.jsonValidation.url' must be an absolute URL or start with './'  to reference schemas located in the extension.
+2022-11-30 22:49:13.628 [error] [Extension Host] Lintings failed on open
+2022-11-30 22:49:13.628 [error] [Extension Host] File: file:///home/odin/GitHub/python/CryptoFile/crypt.py
+2022-11-30 22:49:13.629 [error] [Extension Host] Message: TypeError: Cannot read properties of undefined (reading 'uri')
+2022-11-30 22:49:15.722 [info] [perf] Render performance baseline is 89ms
+2022-11-30 22:49:22.060 [error] Error while registering log channel file:///home/odin/.config/Code%20-%20OSS/logs/20221130T224908/userDataSync.log Timed out while waiting for file to be created
+2022-11-30 22:53:56.569 [critical] Extension 'ms-toolsai.jupyter-renderers CANNOT USE these API proposals 'contribNotebookStaticPreloads'. You MUST start in extension development mode or use the --enable-proposed-api command line flag
+2022-11-30 22:53:56.570 [critical] Extension 'ms-toolsai.jupyter CANNOT USE these API proposals 'notebookControllerKind, notebookDeprecated, notebookMessaging, notebookMime, notebookCellExecutionState, portsAttributes, quickPickSortByLabel, notebookKernelSource, interactiveWindow, notebookControllerAffinityHidden'. You MUST start in extension development mode or use the --enable-proposed-api command line flag
+2022-11-30 22:53:56.570 [critical] Extension 'ms-python.python CANNOT USE these API proposals 'quickPickSortByLabel, testObserver'. You MUST start in extension development mode or use the --enable-proposed-api command line flag
+2022-11-30 22:53:56.652 [error] [tht13.python]: 'configuration.jsonValidation.url' must be an absolute URL or start with './'  to reference schemas located in the extension.
+2022-11-30 22:53:56.676 [error] [ms-toolsai.jupyter]: notebook/kernelSource is a proposed menu identifier. It requires 'package.json#enabledApiProposals: ["notebookKernelSource"]' and is only available when running out of dev or with the following command line switch: --enable-proposed-api ms-toolsai.jupyter
+2022-11-30 22:53:58.680 [error] [Extension Host] extension activation failed Error: Extension 'ms-toolsai.jupyter' CANNOT use API proposal: notebookCellExecutionState.
+Its package.json#enabledApiProposals-property declares:  but NOT notebookCellExecutionState.
+ The missing proposal MUST be added and you must start in extension development mode or use the following command line switch: --enable-proposed-api ms-toolsai.jupyter
+	at m (/usr/lib/code/out/vs/workbench/api/node/extensionHostProcess.js:88:44793)
+	at d.onDidChangeNotebookCellExecutionState (/usr/lib/code/out/vs/workbench/api/node/extensionHostProcess.js:113:54599)
+	at new S (/home/odin/.vscode-oss/extensions/ms-toolsai.jupyter-2022.10.110-universal/out/extension.node.js:17:207218)
+	at t.resolveInstance (/home/odin/.vscode-oss/extensions/ms-toolsai.jupyter-2022.10.110-universal/out/extension.node.js:17:1297910)
+	at /home/odin/.vscode-oss/extensions/ms-toolsai.jupyter-2022.10.110-universal/out/extension.node.js:17:1299848
+	at /home/odin/.vscode-oss/extensions/ms-toolsai.jupyter-2022.10.110-universal/out/extension.node.js:17:1298766
+	at Array.map (<anonymous>)
+	at /home/odin/.vscode-oss/extensions/ms-toolsai.jupyter-2022.10.110-universal/out/extension.node.js:17:1298738
+	at Array.map (<anonymous>)
+	at t.resolveInstance (/home/odin/.vscode-oss/extensions/ms-toolsai.jupyter-2022.10.110-universal/out/extension.node.js:17:1297684)
+	at /home/odin/.vscode-oss/extensions/ms-toolsai.jupyter-2022.10.110-universal/out/extension.node.js:17:1299848
+	at t.resolve (/home/odin/.vscode-oss/extensions/ms-toolsai.jupyter-2022.10.110-universal/out/extension.node.js:17:1300111)
+	at /home/odin/.vscode-oss/extensions/ms-toolsai.jupyter-2022.10.110-universal/out/extension.node.js:17:1283524
+	at e._get (/home/odin/.vscode-oss/extensions/ms-toolsai.jupyter-2022.10.110-universal/out/extension.node.js:17:1283290)
+	at e.get (/home/odin/.vscode-oss/extensions/ms-toolsai.jupyter-2022.10.110-universal/out/extension.node.js:17:1281933)
+	at a.get (/home/odin/.vscode-oss/extensions/ms-toolsai.jupyter-2022.10.110-universal/out/extension.node.js:17:50621)
+	at /home/odin/.vscode-oss/extensions/ms-toolsai.jupyter-2022.10.110-universal/out/extension.node.js:2:4923
+	at process.processTicksAndRejections (node:internal/process/task_queues:96:5)
+2022-11-30 22:56:52.420 [error] No expression to evaluate: Error: No expression to evaluate
+    at T.evaluate (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2162:10498)
+    at Ks.showAt (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2162:6912)
+2022-11-30 22:57:29.971 [error] No expression to evaluate: Error: No expression to evaluate
+    at T.evaluate (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2162:10498)
+    at Ks.showAt (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2162:6912)
+2022-11-30 23:13:00.168 [error] Error: Unable to move/copy '/home/odin/GitHub/python/CryptoFile/DATA/Prueba1' because target '/home/odin/GitHub/python/CryptoFile/DATA/Prueba1 copy 5' already exists at destination.
+    at d.doValidateMoveCopy (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:609:25310)
+    at async d.doMoveCopy (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:609:23582)
+    at async d.copy (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:609:23287)
+    at async i.doMoveOrCopy (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2779:59163)
+    at async c.perform (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2785:20916)
+    at async o.apply (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2785:25768)
+    at async v._performFileEdits (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2785:28261)
+    at async v.perform (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2785:27765)
+    at async m.apply (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2785:30271)
+    at async vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:1749:39621
+2022-11-30 23:13:00.212 [error] Unable to move/copy '/home/odin/GitHub/python/CryptoFile/DATA/Prueba1' because target '/home/odin/GitHub/python/CryptoFile/DATA/Prueba1 copy 5' already exists at destination.: Error: Unable to move/copy '/home/odin/GitHub/python/CryptoFile/DATA/Prueba1' because target '/home/odin/GitHub/python/CryptoFile/DATA/Prueba1 copy 5' already exists at destination.
+    at d.doValidateMoveCopy (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:609:25310)
+    at async d.doMoveCopy (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:609:23582)
+    at async d.copy (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:609:23287)
+    at async i.doMoveOrCopy (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2779:59163)
+    at async c.perform (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2785:20916)
+    at async o.apply (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2785:25768)
+    at async v._performFileEdits (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2785:28261)
+    at async v.perform (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2785:27765)
+    at async m.apply (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2785:30271)
+    at async vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:1749:39621
+2022-11-30 23:13:00.432 [error] Error: Unable to move/copy '/home/odin/GitHub/python/CryptoFile/DATA/Prueba1' because target '/home/odin/GitHub/python/CryptoFile/DATA/Prueba1 copy 6' already exists at destination.
+    at d.doValidateMoveCopy (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:609:25310)
+    at async d.doCanMoveCopy (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:609:22751)
+    at async i.doMoveOrCopy (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2779:58545)
+    at async c.perform (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2785:20916)
+    at async o.apply (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2785:25768)
+    at async v._performFileEdits (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2785:28261)
+    at async v.perform (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2785:27765)
+    at async m.apply (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2785:30271)
+    at async vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:1749:39621
+2022-11-30 23:13:00.452 [error] Unable to move/copy '/home/odin/GitHub/python/CryptoFile/DATA/Prueba1' because target '/home/odin/GitHub/python/CryptoFile/DATA/Prueba1 copy 6' already exists at destination.: Error: Unable to move/copy '/home/odin/GitHub/python/CryptoFile/DATA/Prueba1' because target '/home/odin/GitHub/python/CryptoFile/DATA/Prueba1 copy 6' already exists at destination.
+    at d.doValidateMoveCopy (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:609:25310)
+    at async d.doCanMoveCopy (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:609:22751)
+    at async i.doMoveOrCopy (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2779:58545)
+    at async c.perform (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2785:20916)
+    at async o.apply (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2785:25768)
+    at async v._performFileEdits (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2785:28261)
+    at async v.perform (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2785:27765)
+    at async m.apply (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2785:30271)
+    at async vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:1749:39621
+2022-11-30 23:13:00.744 [error] Error: Unable to move/copy '/home/odin/GitHub/python/CryptoFile/DATA/Prueba1' because target '/home/odin/GitHub/python/CryptoFile/DATA/Prueba1 copy 7' already exists at destination.
+    at d.doValidateMoveCopy (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:609:25310)
+    at async d.doMoveCopy (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:609:23582)
+    at async d.copy (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:609:23287)
+    at async i.doMoveOrCopy (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2779:59163)
+    at async c.perform (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2785:20916)
+    at async o.apply (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2785:25768)
+    at async v._performFileEdits (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2785:28261)
+    at async v.perform (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2785:27765)
+    at async m.apply (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2785:30271)
+    at async vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:1749:39621
+2022-11-30 23:13:00.803 [error] Unable to move/copy '/home/odin/GitHub/python/CryptoFile/DATA/Prueba1' because target '/home/odin/GitHub/python/CryptoFile/DATA/Prueba1 copy 7' already exists at destination.: Error: Unable to move/copy '/home/odin/GitHub/python/CryptoFile/DATA/Prueba1' because target '/home/odin/GitHub/python/CryptoFile/DATA/Prueba1 copy 7' already exists at destination.
+    at d.doValidateMoveCopy (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:609:25310)
+    at async d.doMoveCopy (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:609:23582)
+    at async d.copy (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:609:23287)
+    at async i.doMoveOrCopy (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2779:59163)
+    at async c.perform (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2785:20916)
+    at async o.apply (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2785:25768)
+    at async v._performFileEdits (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2785:28261)
+    at async v.perform (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2785:27765)
+    at async m.apply (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2785:30271)
+    at async vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:1749:39621
+2022-11-30 23:13:01.133 [error] EntryExists (FileSystemError): File at target already exists
+    at l (/usr/lib/code/out/vs/code/electron-main/main.js:34:4144)
+    at n.validateTargetDeleted (/usr/lib/code/out/vs/code/electron-main/main.js:39:42443)
+    at async n.copy (/usr/lib/code/out/vs/code/electron-main/main.js:39:41770)
+2022-11-30 23:13:01.150 [error] File at target already exists: EntryExists (FileSystemError): File at target already exists
+    at l (/usr/lib/code/out/vs/code/electron-main/main.js:34:4144)
+    at n.validateTargetDeleted (/usr/lib/code/out/vs/code/electron-main/main.js:39:42443)
+    at async n.copy (/usr/lib/code/out/vs/code/electron-main/main.js:39:41770)
+2022-11-30 23:13:01.564 [error] Error: Unable to move/copy '/home/odin/GitHub/python/CryptoFile/DATA/Prueba1' because target '/home/odin/GitHub/python/CryptoFile/DATA/Prueba1 copy 11' already exists at destination.
+    at d.doValidateMoveCopy (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:609:25310)
+    at async d.doMoveCopy (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:609:23582)
+    at async d.copy (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:609:23287)
+    at async i.doMoveOrCopy (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2779:59163)
+    at async c.perform (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2785:20916)
+    at async o.apply (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2785:25768)
+    at async v._performFileEdits (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2785:28261)
+    at async v.perform (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2785:27765)
+    at async m.apply (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2785:30271)
+    at async vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:1749:39621
+2022-11-30 23:13:01.579 [error] Unable to move/copy '/home/odin/GitHub/python/CryptoFile/DATA/Prueba1' because target '/home/odin/GitHub/python/CryptoFile/DATA/Prueba1 copy 11' already exists at destination.: Error: Unable to move/copy '/home/odin/GitHub/python/CryptoFile/DATA/Prueba1' because target '/home/odin/GitHub/python/CryptoFile/DATA/Prueba1 copy 11' already exists at destination.
+    at d.doValidateMoveCopy (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:609:25310)
+    at async d.doMoveCopy (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:609:23582)
+    at async d.copy (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:609:23287)
+    at async i.doMoveOrCopy (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2779:59163)
+    at async c.perform (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2785:20916)
+    at async o.apply (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2785:25768)
+    at async v._performFileEdits (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2785:28261)
+    at async v.perform (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2785:27765)
+    at async m.apply (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2785:30271)
+    at async vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:1749:39621
+2022-11-30 23:13:01.993 [error] Error: Unable to move/copy '/home/odin/GitHub/python/CryptoFile/DATA/Prueba1' because target '/home/odin/GitHub/python/CryptoFile/DATA/Prueba1 copy 13' already exists at destination.
+    at d.doValidateMoveCopy (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:609:25310)
+    at async d.doMoveCopy (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:609:23582)
+    at async d.copy (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:609:23287)
+    at async i.doMoveOrCopy (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2779:59163)
+    at async c.perform (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2785:20916)
+    at async o.apply (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2785:25768)
+    at async v._performFileEdits (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2785:28261)
+    at async v.perform (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2785:27765)
+    at async m.apply (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2785:30271)
+    at async vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:1749:39621
+2022-11-30 23:13:02.011 [error] Unable to move/copy '/home/odin/GitHub/python/CryptoFile/DATA/Prueba1' because target '/home/odin/GitHub/python/CryptoFile/DATA/Prueba1 copy 13' already exists at destination.: Error: Unable to move/copy '/home/odin/GitHub/python/CryptoFile/DATA/Prueba1' because target '/home/odin/GitHub/python/CryptoFile/DATA/Prueba1 copy 13' already exists at destination.
+    at d.doValidateMoveCopy (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:609:25310)
+    at async d.doMoveCopy (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:609:23582)
+    at async d.copy (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:609:23287)
+    at async i.doMoveOrCopy (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2779:59163)
+    at async c.perform (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2785:20916)
+    at async o.apply (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2785:25768)
+    at async v._performFileEdits (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2785:28261)
+    at async v.perform (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2785:27765)
+    at async m.apply (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2785:30271)
+    at async vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:1749:39621
+2022-11-30 23:13:02.220 [error] Error: Unable to move/copy '/home/odin/GitHub/python/CryptoFile/DATA/Prueba1' because target '/home/odin/GitHub/python/CryptoFile/DATA/Prueba1 copy 14' already exists at destination.
+    at d.doValidateMoveCopy (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:609:25310)
+    at async d.doMoveCopy (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:609:23582)
+    at async d.copy (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:609:23287)
+    at async i.doMoveOrCopy (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2779:59163)
+    at async c.perform (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2785:20916)
+    at async o.apply (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2785:25768)
+    at async v._performFileEdits (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2785:28261)
+    at async v.perform (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2785:27765)
+    at async m.apply (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2785:30271)
+    at async vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:1749:39621
+2022-11-30 23:13:02.222 [error] Unable to move/copy '/home/odin/GitHub/python/CryptoFile/DATA/Prueba1' because target '/home/odin/GitHub/python/CryptoFile/DATA/Prueba1 copy 14' already exists at destination.: Error: Unable to move/copy '/home/odin/GitHub/python/CryptoFile/DATA/Prueba1' because target '/home/odin/GitHub/python/CryptoFile/DATA/Prueba1 copy 14' already exists at destination.
+    at d.doValidateMoveCopy (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:609:25310)
+    at async d.doMoveCopy (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:609:23582)
+    at async d.copy (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:609:23287)
+    at async i.doMoveOrCopy (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2779:59163)
+    at async c.perform (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2785:20916)
+    at async o.apply (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2785:25768)
+    at async v._performFileEdits (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2785:28261)
+    at async v.perform (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2785:27765)
+    at async m.apply (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2785:30271)
+    at async vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:1749:39621
+2022-11-30 23:13:02.829 [error] Error: Unable to move/copy '/home/odin/GitHub/python/CryptoFile/DATA/Prueba1' because target '/home/odin/GitHub/python/CryptoFile/DATA/Prueba1 copy 17' already exists at destination.
+    at d.doValidateMoveCopy (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:609:25310)
+    at async d.doMoveCopy (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:609:23582)
+    at async d.copy (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:609:23287)
+    at async i.doMoveOrCopy (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2779:59163)
+    at async c.perform (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2785:20916)
+    at async o.apply (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2785:25768)
+    at async v._performFileEdits (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2785:28261)
+    at async v.perform (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2785:27765)
+    at async m.apply (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2785:30271)
+    at async vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:1749:39621
+2022-11-30 23:13:02.846 [error] Unable to move/copy '/home/odin/GitHub/python/CryptoFile/DATA/Prueba1' because target '/home/odin/GitHub/python/CryptoFile/DATA/Prueba1 copy 17' already exists at destination.: Error: Unable to move/copy '/home/odin/GitHub/python/CryptoFile/DATA/Prueba1' because target '/home/odin/GitHub/python/CryptoFile/DATA/Prueba1 copy 17' already exists at destination.
+    at d.doValidateMoveCopy (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:609:25310)
+    at async d.doMoveCopy (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:609:23582)
+    at async d.copy (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:609:23287)
+    at async i.doMoveOrCopy (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2779:59163)
+    at async c.perform (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2785:20916)
+    at async o.apply (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2785:25768)
+    at async v._performFileEdits (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2785:28261)
+    at async v.perform (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2785:27765)
+    at async m.apply (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2785:30271)
+    at async vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:1749:39621
+2022-11-30 23:13:03.347 [error] EntryExists (FileSystemError): File at target already exists
+    at l (/usr/lib/code/out/vs/code/electron-main/main.js:34:4144)
+    at n.validateTargetDeleted (/usr/lib/code/out/vs/code/electron-main/main.js:39:42443)
+    at async n.copy (/usr/lib/code/out/vs/code/electron-main/main.js:39:41770)
+2022-11-30 23:13:03.651 [error] File at target already exists: EntryExists (FileSystemError): File at target already exists
+    at l (/usr/lib/code/out/vs/code/electron-main/main.js:34:4144)
+    at n.validateTargetDeleted (/usr/lib/code/out/vs/code/electron-main/main.js:39:42443)
+    at async n.copy (/usr/lib/code/out/vs/code/electron-main/main.js:39:41770)
+2022-11-30 23:13:03.751 [error] EntryExists (FileSystemError): File at target already exists
+    at l (/usr/lib/code/out/vs/code/electron-main/main.js:34:4144)
+    at n.validateTargetDeleted (/usr/lib/code/out/vs/code/electron-main/main.js:39:42443)
+    at async n.copy (/usr/lib/code/out/vs/code/electron-main/main.js:39:41770)
+2022-11-30 23:13:03.997 [error] EntryExists (FileSystemError): File at target already exists
+    at l (/usr/lib/code/out/vs/code/electron-main/main.js:34:4144)
+    at n.validateTargetDeleted (/usr/lib/code/out/vs/code/electron-main/main.js:39:42443)
+    at async n.copy (/usr/lib/code/out/vs/code/electron-main/main.js:39:41770)
+2022-11-30 23:13:04.521 [error] Error: Unable to move/copy '/home/odin/GitHub/python/CryptoFile/DATA/Prueba1' because target '/home/odin/GitHub/python/CryptoFile/DATA/Prueba1 copy 21' already exists at destination.
+    at d.doValidateMoveCopy (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:609:25310)
+    at async d.doMoveCopy (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:609:23582)
+    at async d.copy (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:609:23287)
+    at async i.doMoveOrCopy (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2779:59163)
+    at async c.perform (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2785:20916)
+    at async o.apply (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2785:25768)
+    at async v._performFileEdits (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2785:28261)
+    at async v.perform (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2785:27765)
+    at async m.apply (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2785:30271)
+    at async vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:1749:39621
+2022-11-30 23:13:04.629 [error] Error: Unable to move/copy '/home/odin/GitHub/python/CryptoFile/DATA/Prueba1' because target '/home/odin/GitHub/python/CryptoFile/DATA/Prueba1 copy 21' already exists at destination.
+    at d.doValidateMoveCopy (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:609:25310)
+    at async d.doMoveCopy (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:609:23582)
+    at async d.copy (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:609:23287)
+    at async i.doMoveOrCopy (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2779:59163)
+    at async c.perform (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2785:20916)
+    at async o.apply (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2785:25768)
+    at async v._performFileEdits (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2785:28261)
+    at async v.perform (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2785:27765)
+    at async m.apply (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2785:30271)
+    at async vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:1749:39621
+2022-11-30 23:13:04.905 [error] EntryExists (FileSystemError): File at target already exists
+    at l (/usr/lib/code/out/vs/code/electron-main/main.js:34:4144)
+    at n.validateTargetDeleted (/usr/lib/code/out/vs/code/electron-main/main.js:39:42443)
+    at async n.copy (/usr/lib/code/out/vs/code/electron-main/main.js:39:41770)
+2022-11-30 23:13:05.179 [error] EntryExists (FileSystemError): File at target already exists
+    at l (/usr/lib/code/out/vs/code/electron-main/main.js:34:4144)
+    at n.validateTargetDeleted (/usr/lib/code/out/vs/code/electron-main/main.js:39:42443)
+    at async n.copy (/usr/lib/code/out/vs/code/electron-main/main.js:39:41770)
+2022-11-30 23:13:05.455 [error] Unable to move/copy '/home/odin/GitHub/python/CryptoFile/DATA/Prueba1' because target '/home/odin/GitHub/python/CryptoFile/DATA/Prueba1 copy 21' already exists at destination.: Error: Unable to move/copy '/home/odin/GitHub/python/CryptoFile/DATA/Prueba1' because target '/home/odin/GitHub/python/CryptoFile/DATA/Prueba1 copy 21' already exists at destination.
+    at d.doValidateMoveCopy (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:609:25310)
+    at async d.doMoveCopy (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:609:23582)
+    at async d.copy (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:609:23287)
+    at async i.doMoveOrCopy (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2779:59163)
+    at async c.perform (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2785:20916)
+    at async o.apply (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2785:25768)
+    at async v._performFileEdits (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2785:28261)
+    at async v.perform (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2785:27765)
+    at async m.apply (vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:2785:30271)
+    at async vscode-file://vscode-app/usr/lib/code/out/vs/workbench/workbench.desktop.main.js:1749:39621
+2022-11-30 23:13:05.481 [error] File at target already exists: EntryExists (FileSystemError): File at target already exists
+    at l (/usr/lib/code/out/vs/code/electron-main/main.js:34:4144)
+    at n.validateTargetDeleted (/usr/lib/code/out/vs/code/electron-main/main.js:39:42443)
+    at async n.copy (/usr/lib/code/out/vs/code/electron-main/main.js:39:41770)
+2022-11-30 23:13:05.786 [error] EntryExists (FileSystemError): File at target already exists
+    at l (/usr/lib/code/out/vs/code/electron-main/main.js:34:4144)
+    at n.validateTargetDeleted (/usr/lib/code/out/vs/code/electron-main/main.js:39:42443)
+    at async n.copy (/usr/lib/code/out/vs/code/electron-main/main.js:39:41770)
+2022-11-30 23:13:06.068 [error] EntryExists (FileSystemError): File at target already exists
+    at l (/usr/lib/code/out/vs/code/electron-main/main.js:34:4144)
+    at n.validateTargetDeleted (/usr/lib/code/out/vs/code/electron-main/main.js:39:42443)
+    at async n.copy (/usr/lib/code/out/vs/code/electron-main/main.js:39:41770)

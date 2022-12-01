@@ -1,0 +1,2 @@
+2022-11-29 20:39:38.725 [info] [perf] Render performance baseline is 202ms
+2022-11-29 20:39:45.447 [error] Error while registering log channel file:///home/odin/.config/Code%20-%20OSS/logs/20221129T203932/userDataSync.log Timed out while waiting for file to be created

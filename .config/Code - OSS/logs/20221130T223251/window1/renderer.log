@@ -1,0 +1,9 @@
+2022-11-30 22:32:59.011 [info] [perf] Render performance baseline is 86ms
+2022-11-30 22:33:05.351 [error] Error while registering log channel file:///home/odin/.config/Code%20-%20OSS/logs/20221130T223251/userDataSync.log Timed out while waiting for file to be created
+2022-11-30 22:34:59.718 [info] [perf] Render performance baseline is 85ms
+2022-11-30 22:35:06.333 [error] Error while registering log channel file:///home/odin/.config/Code%20-%20OSS/logs/20221130T223251/userDataSync.log Timed out while waiting for file to be created
+2022-11-30 22:46:56.667 [warning] [backup tracker] suspended, ignoring dirty change event file:///home/odin/.config/qtile/autostart.sh 
+2022-11-30 22:47:03.239 [info] [perf] Render performance baseline is 87ms
+2022-11-30 22:47:09.764 [error] Error while registering log channel file:///home/odin/.config/Code%20-%20OSS/logs/20221130T223251/userDataSync.log Timed out while waiting for file to be created
+2022-11-30 22:47:45.523 [error] RequestService#request (browser) - error https://open-vsx.org/vscode/gallery/extensionquery {"name":"Canceled"}
+2022-11-30 22:48:49.234 [error] [tht13.python]: 'configuration.jsonValidation.url' must be an absolute URL or start with './'  to reference schemas located in the extension.

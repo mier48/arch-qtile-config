@@ -1,0 +1,69 @@
+2022-11-30 22:34:57.310 [info] Validating found git in: git
+2022-11-30 22:34:57.311 [info] Using git 2.38.1 from git
+2022-11-30 22:34:57.311 [info] > git rev-parse --show-toplevel [7ms]
+2022-11-30 22:34:57.311 [info] fatal: not a git repository (or any of the parent directories): .git
+2022-11-30 22:34:57.311 [info] > git rev-parse --show-toplevel [1ms]
+2022-11-30 22:34:57.311 [info] fatal: not a git repository (or any of the parent directories): .git
+2022-11-30 22:34:57.311 [info] > git rev-parse --show-toplevel [2ms]
+2022-11-30 22:34:57.311 [info] fatal: not a git repository (or any of the parent directories): .git
+2022-11-30 22:34:57.311 [info] > git rev-parse --show-toplevel [2ms]
+2022-11-30 22:34:57.311 [info] fatal: not a git repository (or any of the parent directories): .git
+2022-11-30 22:34:57.311 [info] > git rev-parse --show-toplevel [1ms]
+2022-11-30 22:34:57.311 [info] fatal: not a git repository (or any of the parent directories): .git
+2022-11-30 22:34:57.312 [info] > git rev-parse --show-toplevel [17ms]
+2022-11-30 22:34:57.313 [info] fatal: not a git repository (or any of the parent directories): .git
+2022-11-30 22:34:58.590 [info] > git rev-parse --show-toplevel [1ms]
+2022-11-30 22:34:58.590 [info] fatal: not a git repository (or any of the parent directories): .git
+2022-11-30 22:47:00.905 [info] Validating found git in: git
+2022-11-30 22:47:00.905 [info] Using git 2.38.1 from git
+2022-11-30 22:47:00.905 [info] > git rev-parse --show-toplevel [7ms]
+2022-11-30 22:47:00.905 [info] fatal: not a git repository (or any of the parent directories): .git
+2022-11-30 22:47:00.906 [info] > git rev-parse --show-toplevel [25ms]
+2022-11-30 22:47:00.925 [info] > git rev-parse --git-dir --git-common-dir [11ms]
+2022-11-30 22:47:00.941 [info] Log level: Info
+2022-11-30 22:47:00.941 [info] Open repository: /home/odin/GitHub/python/CryptoFile
+2022-11-30 22:47:00.977 [info] > git status -z -uall [14ms]
+2022-11-30 22:47:00.979 [info] > git remote --verbose [24ms]
+2022-11-30 22:47:00.980 [info] > git for-each-ref --sort -committerdate --format %(refname) %(objectname) %(*objectname) [31ms]
+2022-11-30 22:47:00.983 [info] > git config --get commit.template [6ms]
+2022-11-30 22:47:00.994 [info] > git for-each-ref --format=%(refname)%00%(upstream:short)%00%(objectname)%00%(upstream:track)%00%(upstream:remotename)%00%(upstream:remoteref) refs/heads/main refs/remotes/main [4ms]
+2022-11-30 22:47:01.031 [info] > git status -z -uall [8ms]
+2022-11-30 22:47:01.031 [info] > git remote --verbose [15ms]
+2022-11-30 22:47:01.032 [info] > git for-each-ref --sort -committerdate --format %(refname) %(objectname) %(*objectname) [22ms]
+2022-11-30 22:47:01.035 [info] > git config --get commit.template [4ms]
+2022-11-30 22:47:01.044 [info] > git for-each-ref --format=%(refname)%00%(upstream:short)%00%(objectname)%00%(upstream:track)%00%(upstream:remotename)%00%(upstream:remoteref) refs/heads/main refs/remotes/main [2ms]
+2022-11-30 22:47:01.502 [info] > git check-ignore -v -z --stdin [2ms]
+2022-11-30 22:47:06.824 [info] > git check-ignore -v -z --stdin [2ms]
+2022-11-30 22:47:08.430 [info] > git show --textconv :README.md [48ms]
+2022-11-30 22:47:08.431 [info] > git ls-files --stage -- /home/odin/GitHub/python/CryptoFile/README.md [42ms]
+2022-11-30 22:47:08.439 [info] > git cat-file -s 96ea6f0b24847f65dfc5cec352112425ac414939 [2ms]
+2022-11-30 22:47:08.677 [info] > git show --textconv :crypt.py [8ms]
+2022-11-30 22:47:08.679 [info] > git ls-files --stage -- /home/odin/GitHub/python/CryptoFile/crypt.py [3ms]
+2022-11-30 22:47:08.687 [info] > git cat-file -s 4ef3d6abdd37e9a49ac2f37ca4ab8e96fd5a1b03 [2ms]
+2022-11-30 22:47:23.309 [info] > git check-ignore -v -z --stdin [2ms]
+2022-11-30 22:47:23.860 [info] > git status -z -uall [8ms]
+2022-11-30 22:47:23.863 [info] > git remote --verbose [16ms]
+2022-11-30 22:47:23.863 [info] > git for-each-ref --sort -committerdate --format %(refname) %(objectname) %(*objectname) [23ms]
+2022-11-30 22:47:23.865 [info] > git config --get commit.template [4ms]
+2022-11-30 22:47:23.874 [info] > git for-each-ref --format=%(refname)%00%(upstream:short)%00%(objectname)%00%(upstream:track)%00%(upstream:remotename)%00%(upstream:remoteref) refs/heads/main refs/remotes/main [2ms]
+2022-11-30 22:47:33.341 [info] > git show --textconv :DATA/prueba.txt [7ms]
+2022-11-30 22:47:33.343 [info] > git ls-files --stage -- /home/odin/GitHub/python/CryptoFile/DATA/prueba.txt [3ms]
+2022-11-30 22:47:33.602 [info] > git check-ignore -v -z --stdin [2ms]
+2022-11-30 22:47:34.113 [info] > git status -z -uall [7ms]
+2022-11-30 22:47:34.113 [info] > git remote --verbose [14ms]
+2022-11-30 22:47:34.114 [info] > git for-each-ref --sort -committerdate --format %(refname) %(objectname) %(*objectname) [20ms]
+2022-11-30 22:47:34.116 [info] > git config --get commit.template [3ms]
+2022-11-30 22:47:34.126 [info] > git for-each-ref --format=%(refname)%00%(upstream:short)%00%(objectname)%00%(upstream:track)%00%(upstream:remotename)%00%(upstream:remoteref) refs/heads/main refs/remotes/main [2ms]
+2022-11-30 22:47:36.864 [info] > git show --textconv :crypt.py [6ms]
+2022-11-30 22:47:36.865 [info] > git ls-files --stage -- /home/odin/GitHub/python/CryptoFile/crypt.py [2ms]
+2022-11-30 22:47:36.872 [info] > git cat-file -s 4ef3d6abdd37e9a49ac2f37ca4ab8e96fd5a1b03 [1ms]
+2022-11-30 22:47:39.161 [info] > git status -z -uall [7ms]
+2022-11-30 22:47:39.161 [info] > git remote --verbose [16ms]
+2022-11-30 22:47:39.161 [info] > git for-each-ref --sort -committerdate --format %(refname) %(objectname) %(*objectname) [21ms]
+2022-11-30 22:47:39.163 [info] > git config --get commit.template [2ms]
+2022-11-30 22:47:39.173 [info] > git for-each-ref --format=%(refname)%00%(upstream:short)%00%(objectname)%00%(upstream:track)%00%(upstream:remotename)%00%(upstream:remoteref) refs/heads/main refs/remotes/main [2ms]
+2022-11-30 22:48:49.349 [info] > git rev-parse --show-toplevel [3ms]
+2022-11-30 22:48:49.349 [info] fatal: not a git repository (or any of the parent directories): .git
+2022-11-30 22:48:52.696 [info] > git show --textconv :crypt.py [8ms]
+2022-11-30 22:48:52.697 [info] > git ls-files --stage -- /home/odin/GitHub/python/CryptoFile/crypt.py [2ms]
+2022-11-30 22:48:52.704 [info] > git cat-file -s 4ef3d6abdd37e9a49ac2f37ca4ab8e96fd5a1b03 [1ms]
