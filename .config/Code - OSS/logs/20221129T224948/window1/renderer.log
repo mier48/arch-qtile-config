@@ -1,3 +1,0 @@
-2022-11-29 22:49:50.409 [info] Initial editor state {"filesToOpenOrCreate":[{"fileUri":{"$mid":1,"path":"/etc/lightdm/lightdm-gtk-greeter.conf","scheme":"file"},"type":1,"exists":true,"options":{}}],"filesToDiff":[],"filesToMerge":[]}
-2022-11-29 22:49:55.324 [info] [perf] Render performance baseline is 86ms
-2022-11-29 22:50:01.514 [error] Error while registering log channel file:///home/odin/.config/Code%20-%20OSS/logs/20221129T224948/userDataSync.log Timed out while waiting for file to be created

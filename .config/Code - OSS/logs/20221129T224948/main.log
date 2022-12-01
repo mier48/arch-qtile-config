@@ -1,4 +1,0 @@
-2022-11-29 22:49:48.192 [info] update#ctor - updates are disabled as there is no update URL
-2022-11-29 22:49:51.468 [info] Starting extension host with pid 2253 (fork() took 13 ms).
-2022-11-29 22:58:30.203 [info] Extension host with pid 2253 exited with code: 0, signal: null.
-2022-11-29 22:58:30.214 [info] Waiting for extension host with pid 2253 to exit.
