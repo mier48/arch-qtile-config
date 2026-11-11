@@ -1,31 +1,35 @@
-# Theming for Qtile
+"""Load the Qtile Obsidian palette without modifying files at runtime."""
 
-from os import path
-import subprocess
 import json
-
+from pathlib import Path
 from .path import qtile_path
 
 
 def load_theme():
-    theme = "dark-grey"
+    root = Path(qtile_path)
+    selected = root / "config.json"
+    theme = "obsidian"
 
-    config = path.join(qtile_path, "config.json")
-    if path.isfile(config):
-        with open(config) as f:
-            theme = json.load(f)["theme"]
-    else:
-        with open(config, "w") as f:
-            f.write(f'{{"theme": "{theme}"}}\n')
+    if selected.is_file():
+        with selected.open(encoding="utf-8") as stream:
+            theme = json.load(stream).get("theme", theme)
+
+    if not isinstance(theme, str) or not theme.isidentifier():
+        raise ValueError("Invalid Qtile theme name")
+
+    theme_file = root / "themes" / f"{theme}.json"
+    with theme_file.open(encoding="utf-8") as stream:
+        colors = json.load(stream)
+
+    required = {"dark", "grey", "light", "text", "focus", "active",
+                "inactive", "urgent", "color1", "color2", "color3", "color4"}
+    if not required.issubset(colors) or not all(
+        isinstance(value, str) and value.startswith("#") and len(value) == 7
+        for value in colors.values()
+    ):
+        raise ValueError(f"Invalid Qtile palette: {theme_file}")
+
+    return colors
 
 
-    theme_file = path.join(qtile_path, "themes", f'{theme}.json')
-    if not path.isfile(theme_file):
-        raise Exception(f'"{theme_file}" does not exist')
-
-    with open(path.join(theme_file)) as f:
-        return json.load(f)
-
-
-if __name__ == "settings.theme":
-    colors = load_theme()
+colors = load_theme()

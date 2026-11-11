@@ -1,0 +1,12 @@
+# Generated Python / Qtile files
+__pycache__/
+*.py[cod]
+
+# User-specific universal Fish variables
+.config/fish/fish_variables
+
+# Temporary files
+*.swp
+*.swo
+*~
+.DS_Store
