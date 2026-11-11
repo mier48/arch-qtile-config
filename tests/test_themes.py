@@ -35,6 +35,28 @@ class ThemeTests(unittest.TestCase):
                 self.assertEqual(fastfetch["logo"]["color"]["1"], palette["focus"])
                 self.assertEqual(fastfetch["display"]["color"]["keys"], palette["focus"])
 
+                # Neofetch-style Operator HUD: full Arch logo, consistent
+                # icon labels, real modules and memory percentage bars.
+                self.assertEqual(fastfetch["logo"]["type"], "builtin")
+                self.assertEqual(fastfetch["logo"]["source"], "arch")
+                self.assertEqual(fastfetch["display"]["key"]["width"], 19)
+                self.assertEqual(fastfetch["display"]["separator"], " │ ")
+                modules = fastfetch["modules"]
+                self.assertEqual(modules[:2], ["title", "separator"])
+                self.assertNotIn("custom", [
+                    entry.get("type") for entry in modules if isinstance(entry, dict)
+                ])
+                module_types = [entry["type"] for entry in modules if isinstance(entry, dict)]
+                for required in (
+                    "os", "host", "kernel", "uptime", "packages", "wm",
+                    "terminal", "shell", "display", "cpu", "gpu", "memory", "disk", "colors"
+                ):
+                    self.assertIn(required, module_types)
+                memory = next(entry for entry in modules if isinstance(entry, dict)
+                              and entry.get("type") == "memory")
+                self.assertEqual(memory["percent"]["type"], 3)
+                self.assertEqual(fastfetch["display"]["bar"]["width"], 12)
+
                 alacritty = tomllib.loads(
                     (ROOT / "alacritty" / "themes" / f"{name}.toml").read_text()
                 )
