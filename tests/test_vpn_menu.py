@@ -64,6 +64,18 @@ class VPNMenuTests(unittest.TestCase):
         with patch.object(vpn, "ids", side_effect=RuntimeError()):
             self.assertEqual(vpn.status(), "WG/NM  ?")
 
+    def test_toolbar_has_clickable_vpn_icon_next_to_theme_icon(self):
+        widgets = (SCRIPT.parents[1] / "settings/widgets.py").read_text()
+        themes = widgets.index('action("󰔎", THEMES')
+        vpn_icon = widgets.index('action("󰖂", VPN')
+        state = widgets.index('vpn_widget(),', vpn_icon)
+        power = widgets.index('action("⏻", POWER')
+        self.assertLess(themes, vpn_icon)
+        self.assertLess(vpn_icon, state)
+        self.assertLess(state, power)
+        self.assertIn('mouse_callbacks={"Button1": lazy.spawn(command)}', widgets)
+        self.assertEqual(widgets.count("vpn_widget()"), 2)  # def + primary bar
+
     def test_qtile_integration(self):
         root = SCRIPT.parents[1]
         widgets = (root / "settings/widgets.py").read_text()
