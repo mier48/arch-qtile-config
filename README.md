@@ -1,97 +1,134 @@
-# Configuración de Arch Linux con Qtile
+# Arch Linux · Qtile Obsidian
 
-[![Version: 1.0](https://img.shields.io/badge/Version-1.0-blue.svg)](./README.md)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
+Configuración de **Arch Linux + Qtile (X11) + Alacritty + Fish**, diseñada para productividad con teclado y monitor ultrawide. Un solo lenguaje visual: fondo grafito, texto claro y acento verde azulado.
 
-Este repositorio contiene mi configuración personalizada de **Arch Linux** utilizando el gestor de ventanas **Qtile**. Incluye configuraciones para terminal, entorno gráfico y otras herramientas esenciales.
+> Repositorio de dotfiles, no instalador de Arch Linux. No configura drivers NVIDIA, cifrado, display manager, red ni hardening. **Solo Qtile sobre X11**: utiliza xrandr, picom, feh y Systray, no Qtile Wayland.
 
-## Contenido del Repositorio
+## Estructura
 
-- **`.bashrc`**: Archivo de configuración para la terminal con alias, funciones y personalizaciones útiles.
-- **`.xprofile`**: Configuración de inicio de sesión para configurar variables de entorno y ejecutar procesos al inicio.
-- **Carpeta `.config`**:
-  - **`qtile/`**: Configuración completa de Qtile con atajos de teclado, widgets y temas.
-  - **`alacritty/`**: Configuración personalizada para Alacritty, mi emulador de terminal preferido.
-- **Imagen de ejemplo**: Una captura de pantalla mostrando cómo se ve mi configuración.
+| Ruta | Función |
+| --- | --- |
+| .config/qtile/config.py | Configuración principal y hook startup_once |
+| .config/qtile/settings/ | Atajos, grupos, layouts, widgets, pantallas, ratón y tema |
+| .config/qtile/themes/obsidian.json | Paleta de Qtile |
+| .config/qtile/autostart.sh | Inicio de servicios, red, USB y fondo |
+| .config/alacritty/alacritty.toml | Terminal TOML y shell Fish |
+| .config/alacritty/themes/obsidian.toml | Paleta ANSI |
+| .config/fish/ | Prompt nativo, Git, colores y abreviaturas |
+| .bashrc | Fallback Bash opcional |
 
-## Características
+Las carpetas GTK, estados de Fish, cachés Python y temas históricos no forman parte de esta configuración distribuible.
 
-- **Gestor de ventanas: Qtile**
-  - Atajos de teclado optimizados para productividad.
-  - Widgets personalizados para mostrar información del sistema (CPU, RAM, Wi-Fi, etc.).
-  - Temas visuales minimalistas y personalizables.
+## Diseño
 
-- **Terminal: Alacritty**
-  - Configuración ligera y rápida con colores personalizados.
-  - Soporte para fuentes con iconos (Nerd Fonts).
+| Elemento | Color |
+| --- | --- |
+| Fondo | #111820 |
+| Superficie | #18232E |
+| Borde | #35434F |
+| Texto | #C9D6E1 |
+| Destacado | #EDF3F8 |
+| Acento/foco | #82CDBE |
+| Alerta | #E78991 |
 
-- **Arch Linux**:
-  - Configuración adaptada para rendimiento y simplicidad.
-  - Scripts personalizados para facilitar tareas comunes.
+Qtile: barra de **38 px**, grupos **01–08**, CPU, RAM, tráfico de red y reloj; layouts MonadTall (principal), Bsp, MonadWide y Max, con márgenes de 10 px y foco de 2 px. El widget Net suma las interfaces activas; sin Wi-Fi fijada ni batería.
 
-## Requisitos
+Alacritty: JetBrainsMono Nerd Font a 12,5 puntos, 0,97 de opacidad, TOML y Fish. Fish: prompt nativo de dos líneas, Git, Python venv, códigos de error, duración y hora. No se ejecuta neofetch automáticamente. Los colores están coordinados, pero **deben sincronizarse manualmente** si cambias la paleta.
 
-1. **Arch Linux**: Instalado y configurado en tu sistema.
-2. **Qtile**: Instalado con soporte para Python 3.
-   - Puedes instalarlo con:
-     ```bash
-     sudo pacman -S qtile
-     ```
-3. **Alacritty**: Instalado como emulador de terminal.
-   - Instálalo con:
-     ```bash
-     sudo pacman -S alacritty
-     ```
-4. **Nerd Fonts**: Para iconos y temas visuales (opcional).
+## Dependencias
 
-## Instalación
+Instala Arch Linux + Xorg + Qtile X11 y los paquetes directamente utilizados:
 
-1. Clona este repositorio:
-   ```bash
-   git clone https://github.com/mier48/arch-qtile-config.git
-   cd arch-qtile-config
-   ```
+~~~bash
+sudo pacman -S --needed \
+  git qtile python-psutil alacritty fish \
+  ttf-jetbrains-mono-nerd xorg-xrandr xorg-xsetroot \
+  rofi picom dunst network-manager-applet udiskie \
+  feh scrot thunar pacman-contrib
+~~~
 
-2. Copia los archivos a sus respectivas ubicaciones:
-   ```bash
-   cp .bashrc ~/
-   cp .xprofile ~/
-   cp -r .config/qtile ~/.config/
-   cp -r .config/alacritty ~/.config/
-   ```
+Opcionales:
 
-3. Asegúrate de tener configurado tu `.xprofile` para ejecutar Qtile al inicio. Si usas un gestor de inicio como `lightdm`, edita:
-   ```bash
-   echo "exec qtile" > ~/.xinitrc
-   ```
+~~~bash
+sudo pacman -S --needed eza zoxide fastfetch brightnessctl
+~~~
 
-4. Reinicia tu sistema o cierra sesión y selecciona **Qtile** como gestor de ventanas.
+El applet de red requiere NetworkManager funcionando. El volumen usa pactl y requiere PulseAudio o PipeWire-Pulse. brightnessctl solo funciona en hardware compatible. Los atajos de aplicaciones externas requieren instalar esas aplicaciones.
 
-## Uso
+## Instalación segura
 
-1. **Inicia sesión** en Qtile.
-2. Usa los atajos de teclado predefinidos para navegar y gestionar ventanas. Algunos ejemplos:
-   - `MOD + Enter`: Abrir la terminal (Alacritty).
-   - `MOD + j/k`: Navegar entre ventanas.
-   - `MOD + r`: Abrir el lanzador de aplicaciones (requiere `rofi` o similar).
-   - `MOD + q`: Cerrar la ventana activa.
+~~~bash
+git clone https://github.com/mier48/arch-qtile-config.git
+cd arch-qtile-config
+mkdir -p "$HOME/.config"
+stamp=$(date +%Y%m%d-%H%M%S)
+for component in qtile fish alacritty; do
+  if [ -e "$HOME/.config/$component" ]; then
+    mv "$HOME/.config/$component" "$HOME/.config/$component.backup.$stamp"
+  fi
+  cp -a ".config/$component" "$HOME/.config/$component"
+done
+~~~
 
-### Ejemplo Visual
+Este procedimiento sustituye **solo esos tres directorios** y mantiene los anteriores como respaldo. No copies todo .config ni sobrescribas .bashrc automáticamente. No se incluyen archivos Fish generados (fish_variables), MIME ni ajustes GTK. Alacritty arranca Fish sin cambiar el login shell global.
 
-![Configuración de Arch Linux con Qtile](screenshot.png)
+### Sesión Qtile
 
-## Personalización
+- Con SDDM, LightDM u otro display manager, selecciona **Qtile (X11)**. El hook startup_once inicia los servicios desde autostart.sh sin .xprofile.
+- Con startx, instala xorg-xinit y añade al final de ~/.xinitrc:
 
-- **Qtile**: Edita el archivo de configuración en `~/.config/qtile/config.py` para cambiar atajos de teclado, widgets o temas.
-- **Alacritty**: Ajusta los colores, fuentes y comportamiento en `~/.config/alacritty/alacritty.yml`.
-- **.bashrc**: Agrega o modifica alias y funciones según tus necesidades.
+~~~sh
+exec qtile start
+~~~
 
-## Contribuciones
+El fondo se carga desde ~/Images/wallpaper/wallpaper-4.jpg si existe; en caso contrario, xsetroot utiliza el color #111820.
 
-Si tienes sugerencias o mejoras para esta configuración, siéntete libre de abrir un _issue_ o enviar un _pull request_.
+## Atajos principales
 
-## Licencia
+Super es la tecla Windows/Super.
 
-Este proyecto está licenciado bajo la [Licencia MIT](./LICENSE).
+| Atajo | Acción |
+| --- | --- |
+| Super + Enter | Alacritty + Fish |
+| Super + 1…8 | Cambiar grupo |
+| Super + Shift + 1…8 | Mover ventana al grupo |
+| Super + h/j/k/l | Izquierda/abajo/arriba/derecha |
+| Super + Shift + h/j/k/l | Reordenar ventanas |
+| Super + Ctrl + h/j/k/l | Redimensionar en layouts compatibles |
+| Super + Tab | Siguiente layout |
+| Super + w | Cerrar ventana |
+| Super + e | Thunar |
+| Super + m | Rofi aplicaciones |
+| Super + Shift + m | Rofi ventanas |
+| Super + s / Super + Shift + s | Captura completa / selección |
+| Super + Ctrl + r | Recargar Qtile |
+| Super + Ctrl + q | Salir de Qtile |
 
----
+Super + r abre el comando integrado de Qtile. Los demás atajos de apps están en .config/qtile/settings/keys.py.
+
+## Comprobaciones
+
+~~~bash
+python -m compileall -q "$HOME/.config/qtile"
+qtile check -c "$HOME/.config/qtile/config.py"
+sh -n "$HOME/.config/qtile/autostart.sh"
+find "$HOME/.config/fish" -type f -name '*.fish' -exec fish -n {} \;
+python -c 'import pathlib,tomllib; p=pathlib.Path.home()/".config/alacritty"; [tomllib.loads(f.read_text()) for f in p.rglob("*.toml")]; print("TOML OK")'
+~~~
+
+Abre una ventana de Alacritty para comprobar fuente y renderizado. **No se ha validado el inicio real de Qtile ni el driver NVIDIA en el equipo**. Si algo falla, restaura las carpetas ~/.config/NOMBRE.backup.FECHA desde una TTY. La sintaxis correcta no garantiza el funcionamiento gráfico.
+
+## Mantenimiento
+
+- Tema: qtile/themes/obsidian.json, alacritty/themes/obsidian.toml y fish/conf.d/obsidian.fish.
+- Barra, layouts, grupos, atajos: qtile/settings/.
+- Compositor, notificaciones, red, USB y fondo: qtile/autostart.sh; no duplicar servicios en .xprofile.
+- Fish genera fish_variables por máquina; se ignora en Git.
+- Bash es opcional: Alacritty inicia Fish directamente.
+- La captura anterior se ha retirado por no representar Obsidian. Añade una captura real al documentar el escritorio.
+
+## Documentación oficial
+
+[Qtile: instalación](https://docs.qtile.org/en/stable/manual/install/) · [Qtile: widgets](https://docs.qtile.org/en/stable/manual/ref/widgets.html) · [Fish: prompt](https://fishshell.com/docs/current/prompt.html) · [Alacritty: TOML](https://alacritty.org/config-alacritty.html)
+
+Este repositorio no incluye un archivo LICENSE; no debe presentarse como licenciado bajo MIT.

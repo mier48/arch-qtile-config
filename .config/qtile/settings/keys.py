@@ -1,76 +1,64 @@
-# Qtile keybindings
+"""Qtile shortcuts: consistent Vim directions, keyboard-first workflow."""
 
 from libqtile.config import Key
 from libqtile.lazy import lazy
 
 mod = "mod4"
 
-keys = [Key(key[0], key[1], *key[2:]) for key in [
-    # A list of available commands that can be bound to keys can be found
-    # at https://docs.qtile.org/en/latest/manual/config/lazy.html
-    # Switch between windows
-    ([mod], "h", lazy.layout.left()),
-    ([mod], "l", lazy.layout.right()),
-    ([mod], "k", lazy.layout.down()),
-    ([mod], "j", lazy.layout.up()),
-    ([mod], "space", lazy.layout.next()),
-    # Move windows between left/right columns or move up/down in current stack.
-    # Moving out of range in Columns layout will create new column.
-    ([mod, "shift"], "h", lazy.layout.shuffle_left()),
-    ([mod, "shift"], "l", lazy.layout.shuffle_right()),
-    ([mod, "shift"], "k", lazy.layout.shuffle_down()),
-    ([mod, "shift"], "j", lazy.layout.shuffle_up()),
-    # Grow windows. If current window is on the edge of screen and direction
-    # will be to screen edge - window would shrink.
-    ([mod, "control"], "h", lazy.layout.grow_left()),
-    ([mod, "control"], "l", lazy.layout.grow_right()),
-    ([mod, "control"], "k", lazy.layout.grow_down()),
-    ([mod, "control"], "j", lazy.layout.grow_up()),
-    ([mod], "n", lazy.layout.normalize()),
-    # Toggle between split and unsplit sides of stack.
-    # Split = all windows displayed
-    # Unsplit = 1 window displayed, like Max layout, but still with
-    # multiple stack panes
-    ([mod], "Return", lazy.spawn("alacritty")),
-    # Toggle between different layouts as defined below
-    ([mod], "Tab", lazy.next_layout()),
-    ([mod], "w", lazy.window.kill()),
-    ([mod, "control"], "r", lazy.reload_config()),
-    ([mod, "control"], "q", lazy.shutdown()),
-    ([mod], "r", lazy.spawncmd()),
+keys = [
+    # Focus and cycle through windows.
+    Key([mod], "h", lazy.layout.left()),
+    Key([mod], "j", lazy.layout.down()),
+    Key([mod], "k", lazy.layout.up()),
+    Key([mod], "l", lazy.layout.right()),
+    Key([mod], "space", lazy.layout.next()),
 
-    # Apps
-    ([mod], "a", lazy.spawn("android-studio")),
-    ([mod], "b", lazy.spawn("firefox")),
-    ([mod], "c", lazy.spawn("code")),
-    ([mod], "i", lazy.spawn("gimp")),
-    ([mod], "g", lazy.spawn("github-desktop")),
-    ([mod], "o", lazy.spawn("libreoffice")),
-    ([mod], "t", lazy.spawn("qbittorrent")),
+    # Reorder windows.
+    Key([mod, "shift"], "h", lazy.layout.shuffle_left()),
+    Key([mod, "shift"], "j", lazy.layout.shuffle_down()),
+    Key([mod, "shift"], "k", lazy.layout.shuffle_up()),
+    Key([mod, "shift"], "l", lazy.layout.shuffle_right()),
 
-    # File Explorer
-    ([mod], 'e', lazy.spawn("Thunar")),
+    # Resize in supported layouts.
+    Key([mod, "control"], "h", lazy.layout.grow_left()),
+    Key([mod, "control"], "j", lazy.layout.grow_down()),
+    Key([mod, "control"], "k", lazy.layout.grow_up()),
+    Key([mod, "control"], "l", lazy.layout.grow_right()),
+    Key([mod], "n", lazy.layout.normalize()),
 
-    # Menu
-    ([mod], "m", lazy.spawn("rofi -show run")),
-    ([mod, 'shift'], "m", lazy.spawn("rofi -show")),
+    # Window management and applications.
+    Key([mod], "Return", lazy.spawn("alacritty")),
+    Key([mod], "Tab", lazy.next_layout()),
+    Key([mod], "w", lazy.window.kill()),
+    Key([mod, "control"], "r", lazy.reload_config()),
+    Key([mod, "control"], "q", lazy.shutdown()),
+    Key([mod], "r", lazy.spawncmd()),
 
-    # Screenshot
-    ([mod], "s", lazy.spawn("scrot")),
-    ([mod, "shift"], "s", lazy.spawn("scrot -s")),
+    Key([mod], "a", lazy.spawn("android-studio")),
+    Key([mod], "b", lazy.spawn("firefox")),
+    Key([mod], "c", lazy.spawn("code")),
+    Key([mod], "i", lazy.spawn("gimp")),
+    Key([mod], "g", lazy.spawn("github-desktop")),
+    Key([mod], "o", lazy.spawn("libreoffice")),
+    Key([mod], "t", lazy.spawn("qbittorrent")),
 
-    # Volume
-    ([], "XF86AudioLowerVolume", lazy.spawn(
-        "pactl set-sink-volume @DEFAULT_SINK@ -5%"
-    )),
-    ([], "XF86AudioRaiseVolume", lazy.spawn(
-        "pactl set-sink-volume @DEFAULT_SINK@ +5%"
-    )),
-    ([], "XF86AudioMute", lazy.spawn(
-        "pactl set-sink-mute @DEFAULT_SINK@ toggle"
-    )),
+    Key([mod], "e", lazy.spawn("thunar")),
+    Key([mod], "m", lazy.spawn("rofi -show drun")),
+    Key([mod, "shift"], "m", lazy.spawn("rofi -show window")),
 
-    # Brightness
-    ([], "XF86MonBrightnessUp", lazy.spawn("brightnessctl set +10%")),
-    ([], "XF86MonBrightnessDown", lazy.spawn("brightnessctl set 10%-")),
-]]
+    # Screenshots: full and selection (X11).
+    Key([mod], "s", lazy.spawn("scrot")),
+    Key([mod, "shift"], "s", lazy.spawn("scrot -s")),
+
+    # Audio: requires a PulseAudio-compatible server.
+    Key([], "XF86AudioLowerVolume",
+        lazy.spawn("pactl set-sink-volume @DEFAULT_SINK@ -5%")),
+    Key([], "XF86AudioRaiseVolume",
+        lazy.spawn("pactl set-sink-volume @DEFAULT_SINK@ +5%")),
+    Key([], "XF86AudioMute",
+        lazy.spawn("pactl set-sink-mute @DEFAULT_SINK@ toggle")),
+
+    # Only works where brightnessctl supports the hardware.
+    Key([], "XF86MonBrightnessUp", lazy.spawn("brightnessctl set +10%")),
+    Key([], "XF86MonBrightnessDown", lazy.spawn("brightnessctl set 10%-")),
+]

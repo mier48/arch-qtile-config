@@ -1,50 +1,14 @@
 {
-  "dark": [
-    "#111820",
-    "#111820"
-  ],
-  "grey": [
-    "#35434F",
-    "#35434F"
-  ],
-  "light": [
-    "#EDF3F8",
-    "#EDF3F8"
-  ],
-  "text": [
-    "#C9D6E1",
-    "#C9D6E1"
-  ],
-  "focus": [
-    "#82CDBE",
-    "#82CDBE"
-  ],
-  "active": [
-    "#EDF3F8",
-    "#EDF3F8"
-  ],
-  "inactive": [
-    "#778895",
-    "#778895"
-  ],
-  "urgent": [
-    "#E78991",
-    "#E78991"
-  ],
-  "color1": [
-    "#18232E",
-    "#18232E"
-  ],
-  "color2": [
-    "#233341",
-    "#233341"
-  ],
-  "color3": [
-    "#82CDBE",
-    "#82CDBE"
-  ],
-  "color4": [
-    "#A8BED3",
-    "#A8BED3"
-  ]
+  "dark": "#111820",
+  "grey": "#35434F",
+  "light": "#EDF3F8",
+  "text": "#C9D6E1",
+  "focus": "#82CDBE",
+  "active": "#EDF3F8",
+  "inactive": "#778895",
+  "urgent": "#E78991",
+  "color1": "#18232E",
+  "color2": "#233341",
+  "color3": "#82CDBE",
+  "color4": "#A8BED3"
 }
