@@ -1,21 +1,18 @@
 #!/bin/sh
+# Start once per X11 session; silently skip apps not installed.
+start_once() {
+    name="$1"
+    shift
+    if command -v "$name" >/dev/null 2>&1 && ! pgrep -x "$name" >/dev/null 2>&1; then
+        "$name" "$@" &
+    fi
+}
+start_once picom
+start_once dunst
+start_once nm-applet
+start_once udiskie -t
 
-# Volume
-volumeicon &
-# Network
-nm-applet &
-# Bluetooth
-blueman-applet &
-# Usb disks
-udiskie -t &
-# Battery
-cbatticon &
-# Wallpaper
-feh --bg-scale Images/wallpaper/wallpaper-4.jpg
-# Double Screen
-#xrandr --output eDP --primary --mode 1920x1080 --pos 0x0 --rotate normal --output HDMI-A-0 --mode 1920x1080 --pos 1920x0 --rotate normal
-#xrandr --output eDP --primary --mode 1920x1080 --pos 3440x360 --rotate normal --output HDMI-A-0 --mode 3440x1440 --pos 0x0 --rotate normal
-# Themes
-picom &
-# Slimbook Battery
-slimbookbattery &
+wallpaper="$HOME/Images/wallpaper/wallpaper-4.jpg"
+if command -v feh >/dev/null 2>&1 && [ -f "$wallpaper" ]; then
+    feh --no-fehbg --bg-fill "$wallpaper"
+fi

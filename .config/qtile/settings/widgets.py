@@ -1,149 +1,109 @@
+"""Obsidian status bar — quiet typography, no colored Powerline blocks."""
+
+from shutil import which
 from libqtile import widget
+from libqtile.lazy import lazy
 from .theme import colors
 
-# Get the icons at https://www.nerdfonts.com/cheat-sheet (you need a Nerd Font)
-
-def base(fg='text', bg='dark'): 
-    return {
-        'foreground': colors[fg],
-        'background': colors[bg]
-    }
-
+FONT = "JetBrainsMono Nerd Font"
+C = {name: value[0] for name, value in colors.items()}
 
 def separator():
-    return widget.Sep(**base(), linewidth=0, padding=5)
-
-
-def icon(fg='text', bg='dark', fontsize=16, text="?"):
-    return widget.TextBox(
-        **base(fg, bg),
-        fontsize=fontsize,
-        text=text,
-        padding=3
+    return widget.Sep(
+        linewidth=1, padding=13, size_percent=44,
+        foreground=C["grey"], background=C["dark"]
     )
 
-
-def powerline(fg="light", bg="dark"):
-    return widget.TextBox(
-        **base(fg, bg),
-        text="", # Icon: nf-oct-triangle_left
-        fontsize=37,
-        padding=-4
-    )
-
-
-def workspaces(): 
+def left_widgets():
     return [
-        separator(),
-        widget.GroupBox(
-            **base(fg='light'),
-            font='mononoki Nerd Font',
-            fontsize=19,
-            margin_y=3,
-            margin_x=0,
-            padding_y=8,
-            padding_x=5,
-            borderwidth=1,
-            active=colors['active'],
-            inactive=colors['inactive'],
-            rounded=False,
-            highlight_method='block',
-            urgent_alert_method='block',
-            urgent_border=colors['urgent'],
-            this_current_screen_border=colors['focus'],
-            this_screen_border=colors['grey'],
-            other_current_screen_border=colors['dark'],
-            other_screen_border=colors['dark'],
-            disable_drag=True
+        widget.TextBox(
+            text="", font=FONT, fontsize=19,
+            foreground=C["focus"], background=C["dark"], padding=15,
+            mouse_callbacks={"Button1": lazy.spawn("rofi -show drun")},
         ),
-        separator(),
-        widget.WindowName(**base(fg='focus'), fontsize=14, padding=5),
-        separator(),
+        widget.GroupBox(
+            font=FONT, fontsize=12, background=C["dark"],
+            foreground=C["light"], active=C["text"], inactive=C["inactive"],
+            highlight_method="block", block_highlight_text_color=C["dark"],
+            this_current_screen_border=C["focus"],
+            this_screen_border=C["color4"],
+            other_current_screen_border=C["grey"],
+            other_screen_border=C["grey"],
+            urgent_alert_method="block", urgent_border=C["urgent"],
+            borderwidth=1, rounded=True, disable_drag=True,
+            margin_x=2, margin_y=4,
+            padding_x=9, padding_y=5, spacing=4,
+        ),
+        widget.Spacer(length=18),
+        widget.WindowName(
+            font=FONT, fontsize=12, foreground=C["inactive"],
+            background=C["dark"], max_chars=58, padding=7,
+            empty_group_string="",
+        ),
+        widget.Spacer(),
     ]
 
+def right_widgets(primary=False):
+    result = [
+        widget.CurrentLayout(
+            font=FONT, fontsize=12, foreground=C["color4"],
+            background=C["dark"], padding=8,
+        ),
+        separator(),
+        widget.CPU(
+            font=FONT, fontsize=12, format="CPU {load_percent:.0f}%",
+            foreground=C["text"], background=C["dark"],
+            update_interval=3, padding=9,
+        ),
+        widget.Memory(
+            font=FONT, fontsize=12, format="RAM {MemPercent:.0f}%",
+            foreground=C["text"], background=C["dark"],
+            update_interval=5, padding=9,
+        ),
+        separator(),
+        widget.Net(
+            font=FONT, fontsize=12, interface=None,
+            format="↓ {down:.0f}{down_suffix}  ↑ {up:.0f}{up_suffix}",
+            foreground=C["text"], background=C["dark"],
+            update_interval=3, padding=9,
+        ),
+    ]
+    if primary and which("checkupdates"):
+        result.extend([
+            separator(),
+            widget.CheckUpdates(
+                font=FONT, fontsize=12, distro="Arch_checkupdates",
+                display_format="UPD {updates}", no_update_string="UPD 0",
+                colour_have_updates=C["focus"],
+                colour_no_updates=C["inactive"],
+                background=C["dark"], update_interval=1800, padding=7,
+            ),
+        ])
+    if primary:
+        result.extend([
+            separator(),
+            widget.Systray(background=C["dark"], icon_size=18, padding=5),
+        ])
+    result.extend([
+        separator(),
+        widget.Clock(
+            font=FONT, fontsize=13, format="%d/%m  %H:%M",
+            foreground=C["light"], background=C["dark"], padding=12,
+        ),
+    ])
+    return result
 
-primary_widgets = [
-    *workspaces(),
+def build_widgets(primary=False):
+    return [*left_widgets(), *right_widgets(primary=primary)]
 
-    separator(),
-
-    #widget.CapsNumLockIndicator(markup=False),
-
-    powerline('light', 'dark'),
-
-    icon(bg="light", text=' '), # Icon: nf-fa-download
-    
-    widget.CheckUpdates(
-        background=colors['light'],
-        colour_have_updates=colors['text'],
-        colour_no_updates=colors['text'],
-        no_update_string='0',
-        display_format='{updates}',
-        update_interval=1800,
-        custom_command='checkupdates',
-        padding=5
-    ),
-
-    powerline('color4', 'light'),
-
-    icon(bg="color4", text='  '),  # Icon: nf-fa-feed
-    
-    widget.Battery(**base(bg='color4'), format='{percent:2.0%} - {hour:d}:{min:02d}', padding=5, update_interval=120),
-
-#    powerline('color3', 'color4'),
-
-    powerline('color3', 'color4'),
-
-    icon(bg="color3", text=' '),  # Icon: nf-fa-feed
-    
-    widget.Net(**base(bg='color3'), interface='wlp1s0', padding=5),
-
-    powerline('color2', 'color3'),
-
-    icon(bg="color2", text='  '),  # Icon: nf-fa-heartbeat
-
-    widget.CPU(**base(bg='color2')),
-
-    widget.Memory(**base(bg='color2'), format='-{MemUsed: .0f}{mm}/{MemTotal:.0f}{mm}',  padding=5, measure_mem='G'),
-
-    #widget.CurrentLayoutIcon(**base(bg='color2'), scale=0.65),
-
-    #widget.CurrentLayout(**base(bg='color2'), padding=5),
-
-    powerline('color1', 'color2'),
-
-    icon(bg="color1", fontsize=17, text=' '), # Icon: nf-mdi-calendar_clock
-
-    widget.Clock(**base(bg='color1'), format='%d/%m/%Y - %H:%M', padding=5),
-
-    powerline('dark', 'color1'),
-
-    widget.Systray(background=colors['dark'], padding=5),
-
-    #widget.QuickExit(background=colors['dark'], default_text='[Apagar]', padding=10),
-]
-
-secondary_widgets = [
-    *workspaces(),
-
-    separator(),
-
-    powerline('color1', 'dark'),
-
-    widget.CurrentLayoutIcon(**base(bg='color1'), scale=0.65),
-
-    widget.CurrentLayout(**base(bg='color1'), padding=5),
-
-    powerline('color2', 'color1'),
-
-    widget.Clock(**base(bg='color2'), format='%d/%m/%Y - %H:%M '),
-
-    powerline('dark', 'color2'),
-]
+primary_widgets = build_widgets(primary=True)
+secondary_widgets = build_widgets(primary=False)
 
 widget_defaults = {
-    'font': 'mononoki Nerd Font',
-    'fontsize': 14,
-    'padding': 1,
+    "font": FONT,
+    "fontsize": 12,
+    "foreground": C["text"],
+    "background": C["dark"],
+    "padding": 5,
 }
 extension_defaults = widget_defaults.copy()

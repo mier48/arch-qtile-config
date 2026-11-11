@@ -1,34 +1,39 @@
-# Multimonitor support
+"""X11 monitor setup with independent widget trees."""
 
-from libqtile.config import Screen
-from libqtile import bar
-from libqtile.log_utils import logger
-from .widgets import primary_widgets, secondary_widgets
+import re
 import subprocess
+from libqtile import bar
+from libqtile.config import Screen
+from .theme import colors
+from .widgets import primary_widgets, secondary_widgets, build_widgets
 
+BAR_BACKGROUND = colors["dark"][0]
+BAR_BORDER = colors["grey"][0]
+
+def monitor_count():
+    try:
+        process = subprocess.run(
+            ["xrandr", "--listmonitors"],
+            capture_output=True, text=True, timeout=3, check=False
+        )
+        if process.returncode == 0:
+            match = re.search(r"^Monitors:\s*(\d+)", process.stdout, re.M)
+            if match:
+                return max(1, int(match.group(1)))
+    except (OSError, subprocess.TimeoutExpired):
+        pass
+    return 1
 
 def status_bar(widgets):
-    return bar.Bar(widgets, 24, opacity=1)
-
+    return bar.Bar(
+        widgets, 38,
+        background=BAR_BACKGROUND, opacity=1.0,
+        margin=[9, 12, 0, 12],
+        border_width=[1, 1, 1, 1],
+        border_color=BAR_BORDER,
+    )
 
 screens = [Screen(top=status_bar(primary_widgets))]
-
-xrandr = "xrandr | grep -w 'connected' | cut -d ' ' -f 2 | wc -l"
-
-command = subprocess.run(
-    xrandr,
-    shell=True,
-    stdout=subprocess.PIPE,
-    stderr=subprocess.PIPE,
-)
-
-if command.returncode != 0:
-    error = command.stderr.decode("UTF-8")
-    logger.error(f"Failed counting monitors using {xrandr}:\n{error}")
-    connected_monitors = 1
-else:
-    connected_monitors = int(command.stdout.decode("UTF-8"))
-
-if connected_monitors > 1:
-    for _ in range(1, connected_monitors):
-        screens.append(Screen(top=status_bar(secondary_widgets)))
+for index in range(1, monitor_count()):
+    widgets = secondary_widgets if index == 1 else build_widgets(primary=False)
+    screens.append(Screen(top=status_bar(widgets)))
