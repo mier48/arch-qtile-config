@@ -1,4 +1,4 @@
-"""Qtile Obsidian — modular X11 configuration."""
+"""Qtile Operator HUD — X11 configuration and normal window focus."""
 
 from pathlib import Path
 import subprocess
@@ -21,8 +21,9 @@ main = None
 dgroups_key_binder = None
 dgroups_app_rules = []
 follow_mouse_focus = True
-bring_front_click = False
+bring_front_click = "floating_only"
 cursor_warp = False
 auto_fullscreen = True
-focus_on_window_activation = "urgent"
+focus_on_window_activation = "smart"
+floats_kept_above = True
 wmname = "LG3D"
