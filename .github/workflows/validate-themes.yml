@@ -23,3 +23,5 @@ jobs:
         run: |
           bash -n .bashrc
           find .config/qtile -type f -name '*.sh' -exec sh -n {} \;
+          sh -n scripts/install-dotfiles.sh
+          sh -n sddm/install-theme.sh

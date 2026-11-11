@@ -30,15 +30,17 @@ Comprueba si existe el greeter Qt6:
 
 ```bash
 ls /usr/lib/sddm/sddm-greeter* 2>/dev/null
+# En Arch con Qt6 suele estar disponible:
+/usr/lib/sddm/sddm-greeter-qt6 --help
 ```
 
 Prueba el tema de forma aislada en una sesión gráfica de prueba (puede requerir Xephyr y los módulos Qt6 correspondientes según versión):
 
 ```bash
-sddm-greeter-qt6 --test --theme /usr/share/sddm/themes/operator-obsidian
+sddm-greeter-qt6 --test-mode --theme /usr/share/sddm/themes/operator-obsidian
 ```
 
-Si la orden no está en tu PATH, utiliza la ruta absoluta del binario correspondiente (habitualmente bajo `/usr/lib/sddm/`). En algunas versiones se utiliza `sddm-greeter --test --theme RUTA`. Consulta `sddm-greeter --help` para la sintaxis de tu versión. El modo de prueba no comprueba autenticación real, PAM ni logind.
+Si la orden no está en tu PATH, utiliza la ruta absoluta del binario correspondiente (habitualmente bajo `/usr/lib/sddm/`). En algunas versiones se utiliza `sddm-greeter --test-mode --theme RUTA`. Consulta `sddm-greeter --help` para la sintaxis de tu versión. El modo de prueba no comprueba autenticación real, PAM ni logind.
 
 Solo **después de verificar el tema**, activa SDDM manualmente si no utilizas otro display manager:
 

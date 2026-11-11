@@ -14,6 +14,14 @@ start_once dunst -conf "$HOME/.config/dunst/dunstrc"
 start_once nm-applet
 start_once udiskie -t
 
+# A standalone Qtile session needs a graphical Polkit agent for privileged actions.
+# Avoid GTK theming dependencies; do not start a second agent if one already runs.
+if [ -x /usr/bin/lxqt-policykit-agent ] &&
+   ! pgrep -u "$(id -u)" -f '^/usr/bin/lxqt-policykit-agent($| )' >/dev/null 2>&1; then
+    /usr/bin/lxqt-policykit-agent &
+fi
+
+
 # xss-lock watches XScreenSaver and logind's PrepareForSleep signal.
 # --transfer-sleep-lock passes the logind delay FD to the lock command.
 # lock.sh executes foreground i3lock -n; never background the locker itself.
