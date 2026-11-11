@@ -414,6 +414,34 @@ sudo wg show
 
 **WG/NM ON no garantiza privacidad ni anonimato.** No valida la IP de salida, la tabla de rutas, DNS, fugas IPv6 ni un kill switch. Una desconexión puede devolver el tráfico a la red normal. Si necesitas bloquear todo tráfico fuera del túnel, implementa y comprueba una política de firewall/killswitch independiente antes de utilizarlo.
 
+## BlackArch Tool Center · menú de herramientas
+
+El escritorio incluye un **icono BlackArch (`󰒃`) en el extremo derecho de la toolbar**, junto a WireGuard, temas y energía. Al hacer clic se abre un menú Rofi adaptado a los tres temas del sistema. También está disponible mediante **Super+Shift+B** o **Super+P → BlackArch**.
+
+### Navegación
+
+- **Buscar herramientas instaladas**: búsqueda fuzzy sobre todos los paquetes BlackArch detectados.
+- **Todas las herramientas**: listado alfabético.
+- **Categorías**: se generan dinámicamente a partir de grupos locales de Pacman, por ejemplo `blackarch-recon`, `blackarch-scanner`, `blackarch-webapp`, `blackarch-forensic`, etc.
+- **Detalle de herramienta**: información del paquete (`pacman -Qi`), archivos instalados (`pacman -Ql`) y ejecutables disponibles en `/usr/bin` o `/usr/sbin`.
+- **Ejecución explícita**: una vez elegido el binario, solicita una segunda confirmación y abre Alacritty para ejecutarlo **sin argumentos ni sudo**. No se ejecuta ningún escaneo ni tarea de seguridad al simplemente abrir el menú.
+
+Las categorías y herramientas **no están codificadas como un catálogo estático**; se consultan mediante `pacman -Qg`, que lee los grupos instalados **sin sincronizar repositorios ni usar Internet**. Solo aparecerán las herramientas cuyos paquetes pertenecen a grupos BlackArch en la base local.
+
+### Requisitos y comprobaciones
+
+El menú utiliza los paquetes ya instalados del entorno (`python`, `pacman`, `rofi`, `alacritty`). **No instala BlackArch ni herramientas adicionales**. Instala y configura el repositorio BlackArch exclusivamente con las instrucciones oficiales y después instala los grupos que necesites.
+
+~~~bash
+pacman -Qg | grep '^blackarch' | head -40
+python "$HOME/.config/qtile/scripts/blackarch-menu.py"
+python -m unittest discover -s tests -v
+~~~
+
+Si no se detectan paquetes, revisa que estén instalados y que tengan asignado el grupo `blackarch-...` en la base local de Pacman.
+
+**Consideraciones de seguridad:** solo utiliza metadatos de paquetes instalados y rutas de ejecutables verificadas; no recibe destinos, credenciales ni parámetros de ataque y no usa `eval` ni shell para ejecutar binarios. El menú no añade capacidades, no instala dependencias ni concede privilegios. Algunas herramientas requieren parámetros, interfaces de red, un laboratorio o autorización explícita para usarlas; abrir su ejecutable sin argumentos puede mostrar su ayuda o terminar inmediatamente. Úsalas únicamente en tus sistemas o entornos autorizados.
+
 ## 7. Actualizaciones
 
 Desde la raíz del clon local:
@@ -479,6 +507,7 @@ Después reinicia SDDM o el equipo cuando sea seguro hacerlo. Consulta **sddm/RE
 | Super+M / Super+Shift+M | Lanzador / lista de ventanas |
 | Super+Shift+T | Selector de temas |
 | Super+Shift+V | Selector WireGuard (NetworkManager) |
+| Super+Shift+B | BlackArch Tool Center |
 | Super+Shift+P | Menú de energía y bloqueo |
 | Super+E | Thunar |
 | Super+S / Super+Shift+S | Captura completa / área |

@@ -65,6 +65,7 @@ keys = [
     Key([mod], "m", lazy.spawn("rofi -show drun")),
     Key([mod, "shift"], "t", lazy.spawn(script("theme-menu.sh"))),
     Key([mod, "shift"], "v", lazy.spawn(shlex.join([sys.executable, str(SCRIPTS / "vpn-menu.py")]))),
+    Key([mod, "shift"], "b", lazy.spawn(shlex.join([sys.executable, str(SCRIPTS / "blackarch-menu.py")]))),
     Key([mod, "shift"], "p", lazy.spawn(script("power-menu.sh"))),
     Key([mod, "shift"], "n", lazy.spawn("dunstctl history-pop")),
     Key([mod, "shift"], "m", lazy.spawn("rofi -show window")),

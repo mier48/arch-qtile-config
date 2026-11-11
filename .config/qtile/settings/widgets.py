@@ -27,6 +27,7 @@ THEMES = script("theme-menu.sh")
 POWER = script("power-menu.sh")
 VPN_SCRIPT = SCRIPTS / "vpn-menu.py"
 VPN = shlex.join([sys.executable, str(VPN_SCRIPT)])
+BLACKARCH = shlex.join([sys.executable, str(SCRIPTS / "blackarch-menu.py")])
 
 def space(length=10):
     return widget.Spacer(length=length)
@@ -191,7 +192,7 @@ def controls(primary):
             # Permanent clickable VPN icon (Nerd Fonts md-vpn, U+F0582).
             # Uses the same action widget as the theme chooser.
             action("󰖂", VPN, foreground=C["color4"], size=16),
-            # Compact live NetworkManager WireGuard state beside the icon.
+            action("󰒃", BLACKARCH, foreground=C["focus"], size=16),
             action("⏻", POWER, foreground=C["focus"], size=18, padding=15),
         ])
     return result
