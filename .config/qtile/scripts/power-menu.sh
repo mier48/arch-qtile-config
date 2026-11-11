@@ -33,9 +33,8 @@ case "$choice" in
         fi
         ;;
     'Suspender')
-        if ! command -v i3lock >/dev/null 2>&1 ||
-           ! pgrep -u "$(id -u)" -x xss-lock >/dev/null 2>&1; then
-            error "Suspensión cancelada: inicia xss-lock con i3lock."
+        if ! /bin/sh "$HOME/.config/qtile/scripts/lock-preflight.sh"; then
+            error "Suspensión cancelada: comprueba xss-lock, i3lock y logind."
             exit 1
         fi
         if confirm "Confirmar suspensión"; then
