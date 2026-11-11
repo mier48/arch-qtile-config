@@ -1,295 +1,382 @@
 # Arch Linux · Qtile Operator HUD
 
-Configuración de **Arch Linux + Qtile (X11) + Alacritty + Fish + Fastfetch + Rofi + Dunst + Picom**, con interfaz **Operator HUD**: productividad orientada al teclado, barra de información contextual, espacios de trabajo semánticos y terminal desplegable, optimizada para ultrawide. Tres temas intercambiables — **Obsidian** (grafito y verde azulado), **Cyberpunk** (grafito profundo, cian y magenta) y **Darcula** (gris JetBrains, naranja y verde)— en los componentes del escritorio.
+Entorno de escritorio **Qtile sobre X11** para Arch Linux: navegación por teclado, barra contextual, espacios de trabajo semánticos y terminal desplegable. Incluye **Alacritty, Fish, Fastfetch, Rofi, Dunst, Picom, monitorización opcional, bloqueo i3lock/xss-lock y tema de acceso SDDM Qt6**. Dispone de tres temas coordinados: **Obsidian** (predeterminado), **Cyberpunk** y **Darcula**.
 
-> Repositorio de dotfiles, no instalador de Arch Linux. No configura drivers NVIDIA, cifrado, display manager, red ni hardening. **Solo Qtile sobre X11**: utiliza xrandr, picom, feh y Systray, no Qtile Wayland.
+**Alcance.** Es un repositorio de dotfiles y un instalador de configuraciones de usuario, **no una imagen ni instalador de Arch Linux**. Se parte de Arch ya instalado, con usuario no root y acceso a Internet. No instala ni configura LUKS2, particiones, firmware, Secure Boot, drivers NVIDIA, firewalls ni reglas PAM. La sesión está diseñada para **X11**, no para Qtile Wayland.
 
-## Estructura
+## 0. Antes de comenzar
 
-| Ruta | Función |
-| --- | --- |
-| .config/qtile/config.py | Configuración principal y hook startup_once |
-| .config/qtile/settings/ | Atajos, grupos, layouts, widgets, pantallas, ratón y tema |
-| .config/qtile/themes/{obsidian,cyberpunk,darcula}.json | Paletas de Qtile |
-| .config/qtile/autostart.sh | Inicio de servicios, red, USB y fondo |
-| .config/qtile/scripts/theme-switch.py | Selector seguro y atómico de tema |
-| .config/qtile/scripts/theme-menu.sh | Menú gráfico Rofi de temas |
-| .config/alacritty/alacritty.toml | Terminal TOML y shell Fish |
-| .config/alacritty/themes/obsidian.toml | Paleta ANSI |
-| .config/fish/ | Prompt nativo, Git, colores y abreviaturas |
-| .config/fastfetch/config.jsonc | Información del equipo con módulos y paleta Obsidian |
-| .config/rofi/ | Lanzador, cambio de ventanas y menú de energía |
-| .config/dunst/dunstrc | Notificaciones Obsidian |
-| .config/picom/picom.conf | Composición GLX, sombras y esquinas |
-| .config/qtile/scripts/power-menu.sh | Menú de sesión/energía con confirmaciones |
-| .config/qtile/wallpapers/obsidian.svg | Fondo vectorial editable, 3440 × 1440 |
-| .bashrc | Fallback Bash opcional |
+Comprueba en una TTY o en el escritorio actual:
 
-Las carpetas GTK, estados de Fish, cachés Python y temas históricos no forman parte de esta configuración distribuible.
+~~~bash
+id -un
+uname -r
+systemctl --version
+command -v sudo
+command -v pacman
+~~~
 
-## Diseño
+Necesitas una cuenta con acceso administrativo mediante sudo, conexión a Internet y un servidor Xorg funcional. Si usas NVIDIA, **instala previamente el controlador adecuado para tu GPU y el kernel instalado** siguiendo la documentación de Arch; no instales un paquete NVIDIA a ciegas. Comprueba que Xorg funciona antes de cambiar de gestor de acceso. La configuración utiliza Picom con GLX; si detectas artefactos, deshabilita Picom temporalmente para diagnosticar el driver.
 
-| Elemento | Color |
-| --- | --- |
-| Fondo | #111820 |
-| Superficie | #18232E |
-| Borde | #35434F |
-| Texto | #C9D6E1 |
-| Destacado | #EDF3F8 |
-| Acento/foco | #82CDBE |
-| Alerta | #E78991 |
+No elimines tu sesión de escritorio anterior ni su gestor de acceso hasta terminar las pruebas. Mantén disponible una TTY (normalmente **Ctrl+Alt+F3**) y una contraseña de usuario funcional. Si utilizas cifrado del disco, conserva también el procedimiento de recuperación LUKS.
 
-Qtile: barra **Operator HUD de 44 px**, espacios **01 DEV, 02 WEB, 03 DATA, 04 OPS, 05 LAB, 06 COMMS, 07 DOCS y 08 MISC**, lista de ventanas con foco, layout activo, CPU, RAM, red y reloj; layouts MonadTall (principal), Columns, Bsp, MonadWide y Max, con márgenes de 12 px y foco de 2 px. El widget Net suma las interfaces activas; sin Wi-Fi fijada ni batería.
+> Los bloques de comandos de esta guía están escritos en **POSIX sh/Bash**. Desde Fish ejecuta los scripts con **sh**; no pegues bucles Bash directamente en la consola Fish.
 
-Alacritty: JetBrainsMono Nerd Font a 12,5 puntos, 0,97 de opacidad, TOML y Fish. Fish: prompt nativo de dos líneas, Git, Python venv, códigos de error, duración y hora. Fastfetch se ejecuta con `sys` y, opcionalmente, al iniciar Fish. No se ejecuta automáticamente por defecto. Cada tema dispone de perfiles versionados para los componentes; el selector sincroniza los archivos activos. Si modificas una paleta, actualiza el perfil de cada aplicación correspondiente.
+## 1. Instalar los paquetes de Arch Linux
 
-## Dependencias
+Actualiza primero los repositorios y el sistema:
 
-Instala Arch Linux + Xorg + Qtile X11 y los paquetes directamente utilizados:
+~~~bash
+sudo pacman -Syu
+~~~
+
+### 1.1 Base gráfica y herramientas del proyecto
 
 ~~~bash
 sudo pacman -S --needed \
-  git qtile python-psutil alacritty fish fastfetch \
-  ttf-jetbrains-mono-nerd xorg-xrandr xorg-xsetroot \
-  rofi picom dunst papirus-icon-theme librsvg \
-  i3lock xss-lock network-manager-applet udiskie \
-  feh scrot thunar pacman-contrib
+  git python sudo qtile python-psutil \
+  xorg-server xorg-xauth xorg-xinit xorg-xrandr xorg-xset xorg-xsetroot \
+  alacritty fish fastfetch rofi picom dunst \
+  ttf-jetbrains-mono-nerd noto-fonts papirus-icon-theme \
+  librsvg feh scrot thunar thunar-volman gvfs udisks2 udiskie \
+  networkmanager network-manager-applet \
+  i3lock xss-lock \
+  lxqt-policykit polkit \
+  procps-ng pacman-contrib
 ~~~
 
-Opcionales:
+**Qué instala:** Qtile (gestor de ventanas X11), Alacritty/Fish, lanzadores y notificaciones, composición, fondos, gestor de archivos y unidades USB, NetworkManager, fuentes, bloqueo y agente gráfico Polkit. El paquete **xorg-xset** es necesario para ejecutar el temporizador de inactividad \`xset s 600 600\`. **libpulse**, incluido con los componentes de audio correspondientes, aporta \`pactl\` para los atajos de volumen.
+
+Para audio mediante PipeWire, solo si aún no tienes un sistema de audio configurado:
 
 ~~~bash
-sudo pacman -S --needed eza zoxide brightnessctl btop
+sudo pacman -S --needed pipewire pipewire-audio pipewire-pulse wireplumber libpulse
 ~~~
 
-El applet de red requiere NetworkManager funcionando. El volumen usa pactl y requiere PulseAudio o PipeWire-Pulse. brightnessctl solo funciona en hardware compatible. Los atajos de aplicaciones externas requieren instalar esas aplicaciones.
+No instales dos servidores de audio alternativos si ya utilizas PulseAudio o una configuración PipeWire existente. Comprueba el resultado en la sesión iniciada con \`pactl info\` y \`wpctl status\`. Los atajos de volumen necesitan un servidor PulseAudio compatible.
 
-## Instalación segura
+Opcionales según uso:
+
+~~~bash
+sudo pacman -S --needed btop eza zoxide brightnessctl
+~~~
+
+El panel desplegable de monitorización utiliza **btop**; las otras utilidades enriquecen Fish o gestionan el brillo cuando el hardware lo permite. Firefox, VS Code, Android Studio, GIMP, LibreOffice, qBittorrent y otras apps tienen atajos definidos, pero **no se instalan automáticamente**.
+
+### 1.2 Servicios necesarios
+
+Si esta instalación utiliza NetworkManager, comprueba su estado:
+
+~~~bash
+systemctl status NetworkManager.service
+~~~
+
+Si no estaba habilitado y has elegido NetworkManager como gestor de red:
+
+~~~bash
+sudo systemctl enable --now NetworkManager.service
+~~~
+
+**No hagas esto en remoto sin confirmar la configuración de red**, ni mantengas dos servicios que intenten administrar la misma interfaz. No es necesario activar manualmente un servicio systemd para Picom, Dunst, Fish, Fastfetch o el agente Polkit: Qtile los inicia cuando corresponde.
+
+Para dispositivos USB, comprueba que el servicio y el montaje funcionan después de iniciar Qtile; udiskie utiliza UDisks2 y la autorización Polkit. No ejecutes udiskie como root.
+
+## 2. Clonar y comprobar el repositorio
 
 ~~~bash
 git clone https://github.com/mier48/arch-qtile-config.git
 cd arch-qtile-config
-mkdir -p "$HOME/.config"
-stamp=$(date +%Y%m%d-%H%M%S)
-for component in qtile fish alacritty fastfetch rofi dunst picom; do
-  if [ -e "$HOME/.config/$component" ]; then
-    mv "$HOME/.config/$component" "$HOME/.config/$component.backup.$stamp"
-  fi
-  cp -a ".config/$component" "$HOME/.config/$component"
-done
 ~~~
 
-Este procedimiento sustituye **solo esos siete directorios** y mantiene los anteriores como respaldo. No copies todo .config ni sobrescribas .bashrc automáticamente. No se incluyen archivos Fish generados (fish_variables), MIME ni ajustes GTK. Alacritty arranca Fish sin cambiar el login shell global.
+Antes de modificar el equipo, ejecuta el comprobador. **Es compatible con Bash y Fish** porque se invoca explícitamente con sh:
 
-### Sesión Qtile
+~~~bash
+sh scripts/install-dotfiles.sh --check
+~~~
 
-- Con SDDM, LightDM u otro display manager, selecciona **Qtile (X11)**. El hook startup_once inicia los servicios desde autostart.sh sin .xprofile.
-- Con startx, instala xorg-xinit y añade al final de ~/.xinitrc:
+El comprobador verifica las herramientas principales y ejecuta las pruebas estáticas. También puedes ejecutar:
+
+~~~bash
+python -m unittest discover -s tests -v
+python -m compileall -q .config/qtile
+sh -n scripts/install-dotfiles.sh
+sh -n sddm/install-theme.sh
+~~~
+
+Si aparece un fallo, resuélvelo **antes de instalar**. Las pruebas estáticas no validan el comportamiento real del escritorio, la carga del greeter QML, ni los drivers.
+
+## 3. Instalar los dotfiles (con copia de seguridad)
+
+**No uses sudo** en este paso. El instalador copia exactamente los siete directorios \`qtile\`, \`fish\`, \`alacritty\`, \`fastfetch\`, \`rofi\`, \`dunst\` y \`picom\` a **~/.config/**; no toca GTK, cuentas, PAM ni SDDM.
+
+~~~bash
+sh scripts/install-dotfiles.sh --apply --theme obsidian
+~~~
+
+Sustituye **obsidian** por **cyberpunk** o **darcula** si deseas otro perfil inicial. Si omites \`--theme\`, conserva el tema válido previamente seleccionado o utiliza Obsidian en una instalación nueva.
+
+El instalador:
+
+1. Comprueba los tests y la presencia de todos los directorios de origen.
+2. Prepara los archivos en una carpeta temporal dentro de ~/.config.
+3. Renombra los originales como **~/.config/NOMBRE.backup.FECHA-PID**.
+4. Instala los nuevos directorios y sincroniza los colores del tema mediante el selector existente.
+5. Intenta restaurar los directorios anteriores si ocurre un error durante el despliegue.
+
+El respaldo es local, **no una copia externa**. Una interrupción brusca del suministro eléctrico no garantiza una transacción global entre directorios. Conserva tus copias hasta verificar un reinicio completo; no se modifican los archivos personales de otros programas.
+
+Valida la configuración instalada:
+
+~~~bash
+qtile check -c "$HOME/.config/qtile/config.py"
+sh -n "$HOME/.config/qtile/autostart.sh"
+sh -n "$HOME/.config/qtile/scripts/lock.sh"
+sh -n "$HOME/.config/qtile/scripts/power-menu.sh"
+fish -n "$HOME/.config/fish/config.fish"
+python -m json.tool "$HOME/.config/fastfetch/config.jsonc" >/dev/null
+~~~
+
+**No recargues Qtile si \`qtile check\` falla**. Abre una TTY y restaura el respaldo de Qtile si la sesión gráfica deja de funcionar.
+
+## 4. Elegir la forma de iniciar Qtile
+
+Hay dos alternativas: **SDDM (recomendada)** o **startx**. No necesitas ambas y no debes iniciar una segunda sesión X sobre una sesión gráfica ya existente.
+
+### Opción A: SDDM Qt6
+
+Instala los componentes de SDDM:
+
+~~~bash
+sudo pacman -S --needed sddm qt6-declarative qt6-svg
+~~~
+
+Instala el tema personalizado desde la raíz del repositorio (operación privilegiada, **separada** de los dotfiles):
+
+~~~bash
+sudo sh sddm/install-theme.sh obsidian
+~~~
+
+El instalador admite también **cyberpunk** y **darcula**. Crea una variante del tema en **/usr/share/sddm/themes/operator-NOMBRE/** y el override **/etc/sddm.conf.d/90-operator-hud.conf**. Hace copias si existen versiones anteriores. **No modifica /etc/pam.d/, no configura autologin, no habilita servicios y no cambia el display manager vigente.**
+
+Prueba primero el tema mediante el greeter de tu versión de SDDM:
+
+~~~bash
+ls /usr/lib/sddm/sddm-greeter* 2>/dev/null
+~~~
+
+Normalmente el ejecutable Qt6 estará en \`/usr/lib/sddm/sddm-greeter-qt6\`. Prueba su opción **--test-mode** con la ruta del tema instalado:
+
+~~~bash
+/usr/lib/sddm/sddm-greeter-qt6 --test-mode --theme /usr/share/sddm/themes/operator-obsidian
+~~~
+
+Comprueba la ruta disponible en tu versión y utiliza \`--help\` si difiere. Si has instalado otra variante, ajusta **operator-obsidian** al nombre correspondiente. El modo de prueba **no autentica realmente contra PAM**.
+
+Antes de habilitar SDDM, inspecciona el gestor de acceso actual:
+
+~~~bash
+systemctl status display-manager.service
+ls -l /etc/systemd/system/display-manager.service
+ls /usr/share/xsessions/
+~~~
+
+Asegúrate de disponer de una sesión **Qtile X11** registrada entre las sesiones instaladas. Si ya hay GDM, LightDM u otro display manager, desactívalo por el procedimiento de Arch antes de activar SDDM; **no habilites dos gestores de acceso simultáneamente**.
+
+Cuando hayas probado el greeter, conserves una TTY de rescate y no haya un gestor en conflicto:
+
+~~~bash
+sudo systemctl enable sddm.service
+sudo reboot
+~~~
+
+En el greeter selecciona **Qtile X11**, introduce usuario y contraseña y comprueba el acceso. No hace falta establecer un inicio de sesión automático; la autenticación la gestiona SDDM mediante PAM.
+
+Consulta también **[sddm/README.md](sddm/README.md)** para el alcance, cambio de temas y recuperación del greeter.
+
+### Opción B: startx (sin SDDM)
+
+Si prefieres iniciar Qtile desde una TTY, mantén SDDM deshabilitado, utiliza **xorg-xinit** y crea una copia inicial de los scripts de Xorg:
+
+~~~bash
+cp /etc/X11/xinit/xinitrc "$HOME/.xinitrc"
+~~~
+
+Edita **~/.xinitrc** conservando el bloque que ejecuta **/etc/X11/xinit/xinitrc.d/**, pero **sustituye las aplicaciones finales de ejemplo (twm/xclock/xterm) por una única instrucción de inicio**:
 
 ~~~sh
 exec qtile start
 ~~~
 
-Cada tema incluye un SVG de 3440 × 1440 en `.config/qtile/wallpapers/`. El script `wallpaper.sh` convierte el tema seleccionado a PNG en `~/.cache/qtile-wallpapers/` y lo aplica con `feh`. En ausencia de conversor o imagen, se utiliza el color sólido de cada tema.
+Si ya tenías ~/.xinitrc, **no lo sobrescribas**: revisa primero su contenido. Desde la TTY del usuario:
 
-## Atajos principales
+~~~bash
+startx
+~~~
 
-Super es la tecla Windows/Super.
+Para reforzar el aislamiento, ArchWiki recomienda lanzar Xorg desde la misma consola virtual de inicio de sesión y no escuchar conexiones TCP. Revisa la opción de ~/.xserverrc documentada en ArchWiki antes de personalizarla. Comprueba que DBus y systemd-logind detectan la sesión correctamente.
+
+## 5. Comprobar el escritorio y los periféricos
+
+Una vez iniciada la sesión gráfica:
+
+~~~bash
+echo "$XDG_SESSION_TYPE"
+xrandr --listmonitors
+qtile cmd-obj -o cmd -f status
+pgrep -a picom
+pgrep -a dunst
+pgrep -a xss-lock
+pgrep -af lxqt-policykit-agent
+pactl info
+~~~
+
+**Resultado esperado:** sesión \`x11\`, monitor/es detectados, Qtile activo, una instancia por servicio gráfico necesario, agente Polkit disponible y audio funcional. Para solucionar problemas con NVIDIA, consulta primero los registros de Xorg/SDDM y las instrucciones oficiales del driver.
+
+Comprueba manualmente los componentes: Rofi con **Super+M**, terminal **Super+Enter**, ScratchPad **Super+tecla grave**, barra Operator HUD, notificaciones con \`dunstify "Prueba" "Notificación"\`, Thunar y montaje de un USB. El panel btop utiliza **Super+Shift+tecla grave** si has instalado btop.
+
+### Temas
+
+El selector integrado permite cambiar **Obsidian / Cyberpunk / Darcula** con **Super+Shift+T** o desde terminal:
+
+~~~bash
+python "$HOME/.config/qtile/scripts/theme-switch.py" --list
+python "$HOME/.config/qtile/scripts/theme-switch.py" --current
+python "$HOME/.config/qtile/scripts/theme-switch.py" cyberpunk
+~~~
+
+Este selector actualiza Qtile, Alacritty, Fish, Fastfetch, Rofi, Dunst, Picom y wallpaper. Fish aplica la nueva configuración en terminales nuevas; algunas aplicaciones necesitan reiniciarse.
+
+**El tema de SDDM es una configuración privilegiada independiente**. Cambiar el tema del usuario no actualiza automáticamente SDDM. Para cambiarlo, vuelve a ejecutar el instalador SDDM con sudo tras probar la nueva variante.
+
+## 6. Bloqueo, suspensión y autenticación
+
+La pantalla de bloqueo protege una sesión que **ya está abierta**; SDDM se limita al inicio de sesión. No compartas ni sustituyas sus mecanismos de autenticación.
+
+- **i3lock** utiliza la pila PAM del sistema para desbloquear; el repositorio no instala un módulo PAM propio ni guarda contraseñas.
+- **xss-lock** supervisa la inactividad X11 y coordina con **systemd-logind** las suspensiones mediante \`--transfer-sleep-lock\`.
+- **lock.sh** usa una imagen estática por tema, nunca una captura de pantalla con datos privados. Ejecuta i3lock en primer plano (\`-n\`) y recurre a un fondo sólido si falla el SVG.
+- **xset s 600 600** establece unos diez minutos de inactividad X11. No sustituye una política corporativa de bloqueo.
+- El menú de energía comprueba la presencia de los mecanismos de bloqueo antes de permitir la suspensión desde ese menú. No puede garantizar el bloqueo ante todos los eventos externos, fallos de X11, suspensión del firmware ni condiciones de carrera.
+
+Prueba primero bloqueo y desbloqueo manual:
+
+~~~bash
+sh "$HOME/.config/qtile/scripts/lock.sh"
+~~~
+
+A continuación, valida el bloqueo automático después de diez minutos sin actividad y finalmente una suspensión/reanudación **con una persona presente en el equipo**. Comprueba que se solicita credencial antes de poder interactuar con las ventanas. Si la prueba falla, **no des por segura la suspensión**. Puedes consultar:
+
+~~~bash
+loginctl session-status
+systemd-inhibit --list
+journalctl -b --no-pager -n 100
+~~~
+
+Para hibernación hacen falta configuración de swap, reanudación e initramfs; **no está implementada aquí**. Un bloqueo de pantalla tampoco cifra la memoria RAM ni sustituye LUKS2.
+
+## 7. Actualizaciones
+
+Desde la raíz del clon local:
+
+~~~bash
+git pull --ff-only origin main
+python -m unittest discover -s tests -v
+sh scripts/install-dotfiles.sh --check
+sh scripts/install-dotfiles.sh --apply
+qtile check -c "$HOME/.config/qtile/config.py"
+~~~
+
+El instalador vuelve a crear respaldos y mantiene el tema anterior. **No hagas git pull si tienes cambios locales sin guardar**: revisa primero \`git status\`. Los cambios realizados directamente en ~/.config no se guardan en el repositorio; compáralos con los nuevos archivos antes de reinstalar.
+
+No reinstales ni reinicies SDDM en cada actualización. Solo si cambian los archivos del tema del greeter, revisa el diff y ejecuta de nuevo, expresamente, **sudo sh sddm/install-theme.sh NOMBRE**.
+
+## 8. Recuperación desde TTY
+
+Si Qtile falla, cambia a una TTY con **Ctrl+Alt+F3** e inicia sesión. Revisa el error:
+
+~~~bash
+qtile check -c "$HOME/.config/qtile/config.py"
+journalctl --user -b --no-pager -n 100
+~~~
+
+Los respaldos del instalador tienen la forma **~/.config/qtile.backup.FECHA-PID** (y lo mismo para Fish, Alacritty, etc.). Identifica la copia adecuada:
+
+~~~bash
+ls -ld "$HOME/.config/qtile.backup."*
+~~~
+
+Para recuperar **únicamente Qtile**, sustituye la ruta de respaldo por la que has comprobado:
+
+~~~bash
+mv "$HOME/.config/qtile" "$HOME/.config/qtile.failed"
+mv "$HOME/.config/qtile.backup.FECHA-PID" "$HOME/.config/qtile"
+~~~
+
+Si SDDM se muestra en negro o no permite iniciar sesión, vuelve a una TTY y desactiva únicamente el override del tema sin tocar PAM:
+
+~~~bash
+sudo mv /etc/sddm.conf.d/90-operator-hud.conf \
+  /etc/sddm.conf.d/90-operator-hud.conf.disabled
+~~~
+
+Después reinicia SDDM o el equipo cuando sea seguro hacerlo. Consulta **sddm/README.md** para distinguir un problema QML de un fallo PAM, GPU o de sesión. No borres otros gestores de acceso mientras depuras.
+
+## 9. Referencia de atajos
 
 | Atajo | Acción |
 | --- | --- |
-| Super + Enter | Alacritty + Fish |
-| Super + ` | Terminal scratchpad desplegable |
-| Super + Shift + ` | Panel btop desplegable (requiere btop) |
-| Super + p | Menú Operator HUD con acciones rápidas |
-| Super + f | Alternar pantalla completa |
-| Super + Shift + Espacio | Alternar ventana flotante |
-| Super + [ / ] | Grupo anterior / siguiente |
-| Super + Escape | Volver al grupo anterior |
-| Super + 1…8 | Cambiar grupo |
-| Super + Shift + 1…8 | Mover ventana al grupo |
-| Super + h/j/k/l | Izquierda/abajo/arriba/derecha |
-| Super + Shift + h/j/k/l | Reordenar ventanas |
-| Super + Ctrl + h/j/k/l | Redimensionar en layouts compatibles |
-| Super + Tab | Siguiente layout |
-| Super + w | Cerrar ventana |
-| Super + e | Thunar |
-| Super + m | Rofi aplicaciones |
-| Super + Shift + m | Rofi ventanas |
-| Super + Shift + p | Menú de energía |
-| Super + Shift + t | Selector de temas (Obsidian, Cyberpunk, Darcula) |
-| Super + Shift + n | Recuperar notificación anterior (Dunst) |
-| Super + s / Super + Shift + s | Captura completa / selección |
-| Super + Ctrl + r | Recargar Qtile |
-| Super + Ctrl + q | Salir de Qtile |
-| Super + r | Ejecutar comando mediante Rofi |
+| Super+Enter | Alacritty + Fish |
+| Super+1…8 / Super+Shift+1…8 | Cambiar de grupo / mover ventana |
+| Super+h/j/k/l | Cambiar el foco (Vim) |
+| Super+Shift+h/j/k/l | Reordenar |
+| Super+Ctrl+h/j/k/l | Redimensionar, según layout |
+| Super+Tab | Siguiente layout |
+| Super+F | Alternar pantalla completa |
+| Super+Shift+Espacio | Alternar flotante |
+| Super+tecla grave | Terminal ScratchPad |
+| Super+Shift+tecla grave | Panel btop (opcional) |
+| Super+P | Menú Operator HUD |
+| Super+M / Super+Shift+M | Lanzador / lista de ventanas |
+| Super+Shift+T | Selector de temas |
+| Super+Shift+P | Menú de energía y bloqueo |
+| Super+E | Thunar |
+| Super+S / Super+Shift+S | Captura completa / área |
+| Super+W | Cerrar ventana |
+| Super+Ctrl+R | Recargar configuración Qtile |
+| Super+Ctrl+Q | Cerrar sesión Qtile |
 
-Super + r abre el comando integrado de Qtile. Los demás atajos de apps están en .config/qtile/settings/keys.py.
+El listado completo y los atajos de aplicaciones adicionales están en **.config/qtile/settings/keys.py** y **groups.py**.
 
-## Fase 2 · Pantalla de bloqueo y SDDM (seguridad de sesión)
+## 10. Arquitectura y mantenimiento
 
-La sesión Qtile X11 se bloquea con **i3lock y xss-lock**; el inicio de sesión gráfico utiliza **SDDM Qt6**. No son intercambiables: SDDM autentica el acceso inicial y i3lock protege la sesión existente.
+| Directorio | Función |
+| --- | --- |
+| .config/qtile/ | Ventanas, layouts, barra, atajos, autostart, bloqueo y selector de temas |
+| .config/alacritty/ | Terminal TOML y perfiles ANSI |
+| .config/fish/ | Prompt, completado y funciones |
+| .config/fastfetch/ | Resumen de sistema y perfiles |
+| .config/rofi/ | Lanzador y tema del menú |
+| .config/dunst/ | Notificaciones |
+| .config/picom/ | Composición X11 |
+| sddm/operator-hud/ | Greeter Qt6 y perfiles de tres temas |
+| sddm/install-theme.sh | Instalador administrativo de greeter |
+| scripts/install-dotfiles.sh | Instalador de usuario y respaldos |
+| tests/ | Validación estática ejecutable con Python |
+| .github/workflows/ | Pruebas automáticas en PR |
 
-### Bloqueo X11
-
-- `~/.config/qtile/scripts/lock.sh`: genera una imagen estática sin capturar contenido de ventanas, pantalla o notificaciones. Se usan los temas Obsidian, Cyberpunk y Darcula y fondo sólido si no puede renderizarse la imagen.
-- `xss-lock --transfer-sleep-lock -- /bin/sh ~/.config/qtile/scripts/lock.sh` coordina el bloqueo con systemd-logind. El proceso de i3lock permanece **en primer plano** con `-n`, para no liberar anticipadamente el inhibidor de suspensión.
-- `xset s 600 600` configura el bloqueo automático tras aproximadamente 10 minutos de inactividad X11. Verifica en el equipo real que la detección de inactividad funciona y que otros programas no desactivan XScreenSaver.
-- El menú de energía valida la presencia de los componentes antes de suspender; no garantiza las rutas de suspensión externas ni protege frente a fallos de hardware.
-- El desbloqueo se realiza con la contraseña del usuario mediante PAM utilizado por i3lock. **No se modifica PAM ni se introducen contraseñas en scripts**.
-
-Para comprobarlo manualmente (desde una sesión gráfica activa, después de instalar los nuevos archivos):
-
-~~~bash
-sudo pacman -S --needed i3lock xss-lock librsvg
-sh -n ~/.config/qtile/scripts/lock.sh
-sh ~/.config/qtile/scripts/lock.sh
-~~~
-
-Después comprueba `pgrep -a -u "$USER" xss-lock` y bloquea/desbloquea la sesión. Haz una prueba controlada de suspensión y reanudación con `systemctl suspend`, únicamente cuando hayas verificado que el bloqueo y la autenticación funcionan. **No confíes en la suspensión hasta comprobarlo físicamente.**
-
-### SDDM Qt6
-
-Los archivos del tema están en `sddm/operator-hud/`, con QML nativo, caja de usuario (sin listado de cuentas), contraseña oculta, selector de sesión y controles de reinicio/apagado. Los tres perfiles gráficos tienen idéntica política de autenticación.
-
-El instalador privilegiado está separado de los dotfiles de usuario; instala la variante indicada sin modificar el servicio, sus ficheros PAM, ni activarlo automáticamente:
-
-~~~bash
-sudo pacman -S --needed sddm qt6-declarative qt6-svg
-sudo sh sddm/install-theme.sh obsidian
-# Alternativas:
-# sudo sh sddm/install-theme.sh cyberpunk
-# sudo sh sddm/install-theme.sh darcula
-~~~
-
-Consulta **[sddm/README.md](sddm/README.md)** antes de habilitar SDDM. Prueba el tema mediante el greeter disponible en tu versión y mantén acceso a una TTY. Tras verificarlo y comprobar que no tienes otro display manager activo, la habilitación de `sddm.service` es una decisión administrativa manual.
-
-**Límites de seguridad:** SDDM y el bloqueo de sesión no sustituyen el cifrado LUKS, Secure Boot, una contraseña firmware, ni una configuración segura de reanudación/hibernación. No se configura hibernación automática; el estado de RAM durante suspensión no está cifrado por el simple hecho de usar un bloqueo.
-
-**Cambio de tema:** `Super+Shift+T` cambia el tema de usuario. No puede modificar SDDM (requiere privilegios root); para cambiar el tema del greeter ejecuta explícitamente `sudo sh sddm/install-theme.sh NOMBRE`.
-
-## Operator HUD · arquitectura de interacción
-
-El diseño **Operator HUD** se basa en los componentes nativos `ScratchPad`, `DropDown`, `GroupBox`, `TaskList` y `CurrentLayout` de Qtile. No es un tema de colores ni un widget pack externo: modifica el modelo de interacción del escritorio.
-
-- **Barra flotante modular (44 px)**: acceso al menú de operador, escritorios semánticos, layout actual, selector interactivo de ventanas, métricas de CPU/RAM/red y zona de notificaciones, temas y energía. La lista de ventanas destaca la enfocada y permite activarlas mediante clic.
-- **Diseño ultrawide**: `MonadTall` con proporción 0,57 para separar editor y herramientas; `Columns` proporciona tres columnas de trabajo y `Bsp` particiones flexibles. `Max` permite concentración sin eliminar las ventanas.
-- **Scratchpad terminal**: `Super + \`` despliega Alacritty sobre el grupo actual; se oculta al perder foco. `Super + Shift + \`` abre una segunda terminal flotante con `btop` (opcional).
-- **Menú de operador**: `Super + P` abre un menú Rofi de acciones permitidas: aplicaciones, ventanas, terminal, monitorización, archivos, cambio de tema, historial de notificaciones, comandos y energía.
-- **Pantallas secundarias**: la barra utiliza una disposición reducida por debajo de 1800 píxeles, preservando grupos, reloj y controles básicos. Cada monitor construye sus propias instancias de widgets.
-- **Compatibilidad**: los atajos existentes de aplicaciones, capturas y gestión de temas siguen disponibles. Cyberpunk, Darcula y Obsidian mantienen la misma estructura y solo alteran colores/fondo.
-- **Privacidad**: el menú de operador no ejecuta instrucciones suministradas por el usuario. La opción explícita «Comando» utiliza el lanzador Rofi existente y debe tratarse como una interfaz para ejecutar comandos voluntariamente.
-
-Para una instalación completa de monitorización opcional:
-
-~~~bash
-sudo pacman -S --needed btop
-~~~
-
-El panel btop no aparece automáticamente ni añade un daemon en segundo plano; se crea cuando se invoca su atajo.
-
-## Escritorio Obsidian · fase 1
-
-- **Rofi** (`.config/rofi/`): lanzador de aplicaciones (`Super+m`), selector de ventanas (`Super+Shift+m`) y tema Rasi de 720 px con búsqueda central, iconos Papirus-Dark y selección discreta.
-- **Dunst** (`.config/dunst/dunstrc`): notificaciones en la pantalla enfocada, esquinas redondeadas, separación de 9 px, barra de progreso y urgencias codificadas con el color de alerta.
-- **Picom** (`.config/picom/picom.conf`): backend GLX, VSync, sombras suaves y esquinas de 9 px, sin blur ni transparencias forzadas. La composición depende del driver y puede requerir ajustes en NVIDIA.
-- **Fondo Obsidian** (`.config/qtile/wallpapers/obsidian.svg`): vector editable y reproducible; `rsvg-convert` genera una imagen de 3440 × 1440 una sola vez o cuando cambia el SVG. Sin descargas ni dependencias externas durante el arranque.
-- **Menú de energía** (`Super+Shift+p`): bloquear, suspender, cerrar sesión, reiniciar o apagar. Exige confirmación para acciones disruptivas y **no ejecuta entradas arbitrarias**. El bloqueo de sesión usa i3lock; xss-lock garantiza que se invoque al suspender mediante logind.
-- **Barra Qtile**: botón de energía al extremo derecho que abre el mismo menú.
-
-Para probar Dunst: `dunstify "Obsidian" "Notificación de prueba"`. Para probar Rofi: `rofi -show drun`. Para probar Picom: `picom --config ~/.config/picom/picom.conf` (si ya hay otro compositor activo, no ejecutes una segunda instancia).
-
-**Seguridad del bloqueo:** el menú suspende únicamente si detecta xss-lock e i3lock activos. Antes de depender de esta opción, comprueba desde una sesión real que i3lock bloquea y que al reanudar exige autenticación. Este bloqueo es funcional, pero no constituye todavía un tema personalizado de pantalla de bloqueo (fase 2). Los mecanismos de suspensión de otras aplicaciones o de la BIOS no quedan cubiertos por este menú.
-
-## Selección de temas (escritorio completo)
-
-Tres perfiles predefinidos:
-
-| Tema | Fondo | Acento | Carácter |
-| --- | --- | --- | --- |
-| Obsidian | `#111820` | `#82CDBE` | Minimalista y profesional (predeterminado) |
-| Cyberpunk | `#0B101B` | `#FF4FA3` | Neón controlado con detalles cian |
-| Darcula | `#2B2B2B` | `#CC7832` | Inspiración JetBrains, contraste cálido |
-
-**Con Rofi**: `Super + Shift + T` o el botón de tema en la barra superior. El selector ofrece los tres nombres; cancelar no modifica nada.
-
-**Desde la terminal**:
-
-~~~bash
-python ~/.config/qtile/scripts/theme-switch.py --list
-python ~/.config/qtile/scripts/theme-switch.py --current
-python ~/.config/qtile/scripts/theme-switch.py cyberpunk
-python ~/.config/qtile/scripts/theme-switch.py darcula
-python ~/.config/qtile/scripts/theme-switch.py obsidian
-~~~
-
-Para cambiar sin recargar Qtile y los servicios gráficos (por ejemplo, desde TTY):
-
-~~~bash
-python ~/.config/qtile/scripts/theme-switch.py darcula --no-reload
-~~~
-
-**Alcance del cambio**: Qtile (incluidos widgets/bordes), Alacritty (ANSI), Fish (sintaxis y prompts en nuevas sesiones), Fastfetch, Rofi, Dunst, Picom y wallpaper. Se conservan los atajos, layouts, parámetros de privacidad y estructura de módulos. **No cambia el tema GTK de aplicaciones externas** ni los estilos de páginas web.
-
-Los perfiles fuente están en `themes/<tema>.*` dentro de cada componente y los archivos activos tienen nombres estables: `alacritty/themes/active.toml`, `rofi/themes/active.rasi`, `fish/conf.d/theme.fish`, `fastfetch/config.jsonc`, `dunst/dunstrc` y `picom/picom.conf`. Qtile usa `qtile/config.json`.
-
-El selector valida que existan los perfiles y después sustituye los archivos activos con escritura temporal y reemplazo atómico por archivo. **No es una transacción global** ante un corte de energía: ejecutar otra vez el selector corrige una actualización parcial. En una sesión X11 intenta actualizar fondo, Dunst, Picom y Qtile. Fish aplica los cambios en nuevas terminales; Alacritty dispone de recarga automática. La configuración de respaldo `.bashrc` también selecciona el acento del tema al iniciar una nueva sesión Bash. Si un servicio no permite recarga en tu versión, reinicia la sesión. El tema seleccionado se mantiene entre reinicios.
-
-Tras desplegar por primera vez, ejecuta el selector con el tema activo para sincronizar los perfiles:
-
-~~~bash
-python ~/.config/qtile/scripts/theme-switch.py obsidian --no-reload
-~~~
-
-## Fastfetch · Obsidian
-
-La configuración reside en **.config/fastfetch/config.jsonc**, se detecta automáticamente al ejecutar `fastfetch` y está integrada con la abreviatura **`sys`** de Fish. Utiliza el logo pequeño de Arch en verde azulado y tres bloques: **Sistema** (SO, kernel, actividad, paquetes), **Entorno** (Qtile, terminal, shell y pantalla) y **Hardware** (modelo, CPU, GPU, memoria y disco raíz). La fila final muestra la paleta ANSI del terminal Alacritty.
-
-- Ejecución puntual: `fastfetch` o `sys` dentro de Fish.
-- Activar al abrir una nueva terminal interactiva: `set -U OBSIDIAN_FASTFETCH_AUTOSTART 1`.
-- Desactivar: `set -U OBSIDIAN_FASTFETCH_AUTOSTART 0`.
-- El inicio automático **está desactivado por defecto**, se omite por SSH y no se repite en shells Fish anidados.
-- No consulta IP pública, tiempo meteorológico ni servicios externos; tampoco utiliza módulos `Command` ni ejecuta procesos arbitrarios. Los valores de hardware se detectan dinámicamente, sin fijar un modelo de CPU o GPU.
-- No almacenes detalles privados del equipo en capturas públicas sin revisarlas.
-
-Para modificar los colores, mantén consistentes los hexadecimales de **.config/fastfetch/config.jsonc** con los temas de Qtile, Alacritty y Fish. Fastfetch utiliza el formato JSONC oficial; el archivo distribuido es JSON estricto válido para facilitar su validación.
-
-## Comprobaciones
-
-~~~bash
-python -m compileall -q "$HOME/.config/qtile"
-qtile check -c "$HOME/.config/qtile/config.py"
-sh -n "$HOME/.config/qtile/autostart.sh"
-sh -n "$HOME/.config/qtile/scripts/power-menu.sh"
-sh -n "$HOME/.config/qtile/scripts/wallpaper.sh"
-sh -n "$HOME/.config/qtile/scripts/theme-menu.sh"
-sh -n "$HOME/.config/qtile/scripts/operator-menu.sh"
-sh -n "$HOME/.config/qtile/scripts/lock.sh"
-sh -n "$HOME/.config/qtile/scripts/lock-preflight.sh"
-python -m py_compile "$HOME/.config/qtile/scripts/theme-switch.py"
-python -m unittest discover -s tests -v
-find "$HOME/.config/fish" -type f -name '*.fish' -exec fish -n {} \;
-python -m json.tool "$HOME/.config/fastfetch/config.jsonc" > /dev/null
-fastfetch -c "$HOME/.config/fastfetch/config.jsonc" --show-errors
-python -c 'import pathlib,tomllib; p=pathlib.Path.home()/".config/alacritty"; [tomllib.loads(f.read_text()) for f in p.rglob("*.toml")]; print("TOML OK")'
-~~~
-
-Abre una ventana de Alacritty para comprobar fuente y renderizado. **No se ha validado el inicio real de Qtile ni el driver NVIDIA en el equipo**. Si algo falla, restaura las carpetas ~/.config/NOMBRE.backup.FECHA desde una TTY. La sintaxis correcta no garantiza el funcionamiento gráfico.
-
-## Mantenimiento
-
-- Temas: modifica los perfiles de `qtile/themes/`, `alacritty/themes/`, `fish/themes/`, `fastfetch/themes/`, `rofi/themes/`, `dunst/themes/` y `picom/themes/`; aplica con `theme-switch.py`.
-- Barra, layouts, grupos, atajos: qtile/settings/.
-- Compositor, notificaciones, red, USB y fondo: qtile/autostart.sh; archivos separados en picom/, dunst/ y rofi/. No duplicar servicios en .xprofile.
-- Fish genera fish_variables por máquina; se ignora en Git.
-- Bash es opcional: Alacritty inicia Fish directamente.
-- La captura anterior se ha retirado por no representar Obsidian. Añade una captura real al documentar el escritorio.
+El repositorio no versiona temas GTK, asociaciones MIME privadas ni archivos universales generados por Fish. No modifica **~/.bashrc** automáticamente. **SDDM y PAM permanecen separados** de las configuraciones de usuario.
 
 ## Documentación oficial
 
-[Qtile: instalación](https://docs.qtile.org/en/stable/manual/install/) · [Qtile: grupos y ScratchPad](https://docs.qtile.org/en/stable/manual/config/groups.html) · [Qtile: widgets](https://docs.qtile.org/en/stable/manual/ref/widgets.html) · [Fish: prompt](https://fishshell.com/docs/current/prompt.html) · [Alacritty: TOML](https://alacritty.org/config-alacritty.html) · [Fastfetch: configuración JSONC](https://github.com/fastfetch-cli/fastfetch/wiki/Configuration) · [Rofi: temas](https://davatorium.github.io/rofi/current/rofi-theme.5/) · [Dunst: documentación](https://dunst-project.org/documentation/) · [Picom: opciones](https://picom.app/)
+- [ArchWiki: Installation guide](https://wiki.archlinux.org/title/Installation_guide)
+- [ArchWiki: Qtile](https://wiki.archlinux.org/title/Qtile)
+- [Qtile: documentación](https://docs.qtile.org/en/stable/)
+- [ArchWiki: Xinit](https://wiki.archlinux.org/title/Xinit)
+- [ArchWiki: SDDM](https://wiki.archlinux.org/title/SDDM)
+- [ArchWiki: PAM](https://wiki.archlinux.org/title/PAM)
+- [ArchWiki: Polkit](https://wiki.archlinux.org/title/Polkit)
+- [ArchWiki: NVIDIA](https://wiki.archlinux.org/title/NVIDIA)
+- [ArchWiki: PipeWire](https://wiki.archlinux.org/title/PipeWire)
+- [SDDM: temas QML](https://github.com/sddm/sddm/blob/develop/docs/THEMING.md)
 
-Las comprobaciones de coherencia de los tres perfiles se ejecutan también en GitHub Actions para cada pull request. Esto no sustituye las pruebas de renderizado en una sesión X11 real.
-
-Este repositorio no incluye un archivo LICENSE; no debe presentarse como licenciado bajo MIT. Los temas SDDM de este repositorio no modifican la configuración PAM del sistema.
-
+**Validación:** los tests automatizados y la revisión estática no sustituyen una prueba real con tu hardware y sesión X11. Antes de considerar seguro el sistema, verifica autenticación, bloqueo, recuperación y suspensión. Este repositorio no incluye un archivo LICENSE.
