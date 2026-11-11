@@ -163,7 +163,7 @@ python ~/.config/qtile/scripts/theme-switch.py darcula --no-reload
 
 Los perfiles fuente están en `themes/<tema>.*` dentro de cada componente y los archivos activos tienen nombres estables: `alacritty/themes/active.toml`, `rofi/themes/active.rasi`, `fish/conf.d/theme.fish`, `fastfetch/config.jsonc`, `dunst/dunstrc` y `picom/picom.conf`. Qtile usa `qtile/config.json`.
 
-El selector valida que existan los perfiles y después sustituye los archivos activos con escritura temporal y reemplazo atómico por archivo. **No es una transacción global** ante un corte de energía: ejecutar otra vez el selector corrige una actualización parcial. En una sesión X11 intenta actualizar fondo, Dunst, Picom y Qtile. Fish aplica los cambios en nuevas terminales; Alacritty dispone de recarga automática. Si un servicio no permite recarga en tu versión, reinicia la sesión. El tema seleccionado se mantiene entre reinicios.
+El selector valida que existan los perfiles y después sustituye los archivos activos con escritura temporal y reemplazo atómico por archivo. **No es una transacción global** ante un corte de energía: ejecutar otra vez el selector corrige una actualización parcial. En una sesión X11 intenta actualizar fondo, Dunst, Picom y Qtile. Fish aplica los cambios en nuevas terminales; Alacritty dispone de recarga automática. La configuración de respaldo `.bashrc` también selecciona el acento del tema al iniciar una nueva sesión Bash. Si un servicio no permite recarga en tu versión, reinicia la sesión. El tema seleccionado se mantiene entre reinicios.
 
 Tras desplegar por primera vez, ejecuta el selector con el tema activo para sincronizar los perfiles:
 
@@ -194,6 +194,7 @@ sh -n "$HOME/.config/qtile/scripts/power-menu.sh"
 sh -n "$HOME/.config/qtile/scripts/wallpaper.sh"
 sh -n "$HOME/.config/qtile/scripts/theme-menu.sh"
 python -m py_compile "$HOME/.config/qtile/scripts/theme-switch.py"
+python -m unittest discover -s tests -v
 find "$HOME/.config/fish" -type f -name '*.fish' -exec fish -n {} \;
 python -m json.tool "$HOME/.config/fastfetch/config.jsonc" > /dev/null
 fastfetch -c "$HOME/.config/fastfetch/config.jsonc" --show-errors
@@ -214,6 +215,8 @@ Abre una ventana de Alacritty para comprobar fuente y renderizado. **No se ha va
 ## Documentación oficial
 
 [Qtile: instalación](https://docs.qtile.org/en/stable/manual/install/) · [Qtile: widgets](https://docs.qtile.org/en/stable/manual/ref/widgets.html) · [Fish: prompt](https://fishshell.com/docs/current/prompt.html) · [Alacritty: TOML](https://alacritty.org/config-alacritty.html) · [Fastfetch: configuración JSONC](https://github.com/fastfetch-cli/fastfetch/wiki/Configuration) · [Rofi: temas](https://davatorium.github.io/rofi/current/rofi-theme.5/) · [Dunst: documentación](https://dunst-project.org/documentation/) · [Picom: opciones](https://picom.app/)
+
+Las comprobaciones de coherencia de los tres perfiles se ejecutan también en GitHub Actions para cada pull request. Esto no sustituye las pruebas de renderizado en una sesión X11 real.
 
 Este repositorio no incluye un archivo LICENSE; no debe presentarse como licenciado bajo MIT.
 

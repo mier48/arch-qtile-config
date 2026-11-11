@@ -1,4 +1,4 @@
-# Cyberpunk ANSI palette: consistent with ~/.config/qtile/themes/obsidian.json.
+# Cyberpunk ANSI palette: consistent with ~/.config/qtile/themes/selected-theme.json.
 [colors]
 draw_bold_text_with_bright_colors = false
 
@@ -29,7 +29,7 @@ white = "#F5EAFF"
 
 [colors.cursor]
 text = "#0B101B"
-cursor = "#36DCE5"
+cursor = "#FF4FA3"
 
 [colors.vi_mode_cursor]
 text = "#0B101B"

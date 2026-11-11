@@ -4,7 +4,7 @@
     "type": "small",
     "source": "arch",
     "color": {
-      "1": "#36DCE5"
+      "1": "#FF4FA3"
     },
     "padding": {
       "top": 1,
@@ -14,7 +14,7 @@
   "display": {
     "separator": "  ",
     "color": {
-      "keys": "#36DCE5",
+      "keys": "#FF4FA3",
       "title": "#F5EAFF",
       "output": "#D9D1EC",
       "separator": "#3B3455"
@@ -28,7 +28,7 @@
     {
       "type": "custom",
       "key": "01  SISTEMA",
-      "keyColor": "#36DCE5",
+      "keyColor": "#FF4FA3",
       "format": "────────────────────"
     },
     {
@@ -51,7 +51,7 @@
     {
       "type": "custom",
       "key": "02  ENTORNO",
-      "keyColor": "#36DCE5",
+      "keyColor": "#FF4FA3",
       "format": "────────────────────"
     },
     {
@@ -74,7 +74,7 @@
     {
       "type": "custom",
       "key": "03  HARDWARE",
-      "keyColor": "#36DCE5",
+      "keyColor": "#FF4FA3",
       "format": "────────────────────"
     },
     {

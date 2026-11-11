@@ -7,7 +7,7 @@
     text:           #D9D1EC;
     text-strong:    #F5EAFF;
     muted:          #827D9D;
-    accent:         #36DCE5;
+    accent:         #FF4FA3;
     urgent:         #FF647D;
 
     background-color: transparent;
