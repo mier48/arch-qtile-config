@@ -11,11 +11,12 @@ choice=$(printf '%s\n' \
     '04  Monitor del sistema' \
     '05  Archivos' \
     '06  Temas' \
-    '07  Notificaciones' \
-    '08  Comando' \
-    '09  Energía' |
+    '07  VPN' \
+    '08  Notificaciones' \
+    '09  Comando' \
+    '10  Energía' |
     rofi -dmenu -i -no-custom -p 'OPERADOR' \
-        -theme-str 'window { width: 580px; } listview { lines: 9; }') || exit 0
+        -theme-str 'window { width: 580px; } listview { lines: 10; }') || exit 0
 
 case "$choice" in
     '01  Aplicaciones') exec rofi -show drun ;;
@@ -31,8 +32,9 @@ case "$choice" in
         ;;
     '05  Archivos') exec thunar ;;
     '06  Temas') exec /bin/sh "$HOME/.config/qtile/scripts/theme-menu.sh" ;;
-    '07  Notificaciones') exec dunstctl history-pop ;;
-    '08  Comando') exec rofi -show run ;;
-    '09  Energía') exec /bin/sh "$HOME/.config/qtile/scripts/power-menu.sh" ;;
+    '07  VPN') exec python "$HOME/.config/qtile/scripts/vpn-menu.py" ;;
+    '08  Notificaciones') exec dunstctl history-pop ;;
+    '09  Comando') exec rofi -show run ;;
+    '10  Energía') exec /bin/sh "$HOME/.config/qtile/scripts/power-menu.sh" ;;
     *) exit 0 ;;
 esac

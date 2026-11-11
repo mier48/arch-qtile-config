@@ -5,6 +5,7 @@ Colors are provided by the selected Obsidian/Cyberpunk/Darcula palette.
 """
 
 import shlex
+import sys
 from pathlib import Path
 from shutil import which
 
@@ -24,6 +25,8 @@ def script(name):
 COMMAND = script("operator-menu.sh")
 THEMES = script("theme-menu.sh")
 POWER = script("power-menu.sh")
+VPN_SCRIPT = SCRIPTS / "vpn-menu.py"
+VPN = shlex.join([sys.executable, str(VPN_SCRIPT)])
 
 def space(length=10):
     return widget.Spacer(length=length)
@@ -150,6 +153,21 @@ def telemetry():
         ),
     ]
 
+def vpn_widget():
+    # Poll in background; NetworkManager delays must not stall Qtile's UI.
+    return widget.GenPollCommand(
+        cmd=[sys.executable, str(VPN_SCRIPT), "--status"],
+        shell=False,
+        update_interval=8,
+        font=FONT,
+        fontsize=11,
+        foreground=C["focus"],
+        background=C["dark"],
+        padding=10,
+        mouse_callbacks={"Button1": lazy.spawn(VPN)},
+    )
+
+
 def controls(primary):
     result = []
     if primary and which("checkupdates"):
@@ -167,6 +185,7 @@ def controls(primary):
             ),
         ])
     if primary:
+        result.extend([separator(), vpn_widget()])
         result.extend([
             separator(),
             widget.Systray(
