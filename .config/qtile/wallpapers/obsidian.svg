@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="3440" height="1440" viewBox="0 0 3440 1440">
+<defs>
+ <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#111820"/><stop offset=".6" stop-color="#141e29"/><stop offset="1" stop-color="#0e151d"/></linearGradient>
+ <linearGradient id="layer" x1="0" y1="0" x2=".7" y2="1"><stop stop-color="#35434F"/><stop offset=".45" stop-color="#18232E"/><stop offset="1" stop-color="#111820"/></linearGradient>
+ <linearGradient id="teal" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#82CDBE" stop-opacity=".45"/><stop offset=".5" stop-color="#233341"/><stop offset="1" stop-color="#0e151d"/></linearGradient>
+ <linearGradient id="line" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#82CDBE" stop-opacity="0"/><stop offset=".5" stop-color="#82CDBE" stop-opacity=".9"/><stop offset="1" stop-color="#A8BED3" stop-opacity=".1"/></linearGradient>
+</defs>
+<rect width="3440" height="1440" fill="url(#bg)"/>
+<path d="M-180 1480 2030 810 2650 840 3440 210 3580 1590Z" fill="url(#layer)" opacity=".75"/>
+<path d="M1120 1490 2150 510 Q2230 435 2320 490 L3570 1200 3570 1600Z" fill="url(#teal)" opacity=".8"/>
+<path d="M1130 1450 2170 514 Q2240 454 2310 494 L3520 1200" fill="none" stroke="url(#line)" stroke-width="4"/>
+<path d="M1930 800 2830 -70 3220 -70 2330 810Z" fill="#233341" opacity=".7"/>
+<path d="M2360 772 3170 -20" stroke="#A8BED3" stroke-opacity=".48" stroke-width="3"/>
+<path d="M2510 655 Q2730 390 2950 630 L3500 920" fill="none" stroke="#A8BED3" stroke-opacity=".28" stroke-width="3"/>
+<path d="M1850 530 2400 5" stroke="#35434F" stroke-opacity=".65" stroke-width="3"/>
+</svg>
