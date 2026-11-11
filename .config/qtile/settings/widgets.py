@@ -149,6 +149,17 @@ def right_widgets(primary=False):
             background=C["dark"],
             padding=12,
         ),
+        widget.TextBox(
+            text="⏻",
+            font=FONT,
+            fontsize=18,
+            foreground=C["focus"],
+            background=C["dark"],
+            padding=14,
+            mouse_callbacks={
+                "Button1": lazy.spawn("/bin/sh ~/.config/qtile/scripts/power-menu.sh"),
+            },
+        ),
     ])
     return result
 

@@ -1,6 +1,6 @@
 # Arch Linux · Qtile Obsidian
 
-Configuración de **Arch Linux + Qtile (X11) + Alacritty + Fish + Fastfetch**, diseñada para productividad con teclado y monitor ultrawide. Un solo lenguaje visual: fondo grafito, texto claro y acento verde azulado.
+Configuración de **Arch Linux + Qtile (X11) + Alacritty + Fish + Fastfetch + Rofi + Dunst + Picom**, diseñada para productividad con teclado y monitor ultrawide. Un solo lenguaje visual: fondo grafito, texto claro y acento verde azulado.
 
 > Repositorio de dotfiles, no instalador de Arch Linux. No configura drivers NVIDIA, cifrado, display manager, red ni hardening. **Solo Qtile sobre X11**: utiliza xrandr, picom, feh y Systray, no Qtile Wayland.
 
@@ -16,6 +16,11 @@ Configuración de **Arch Linux + Qtile (X11) + Alacritty + Fish + Fastfetch**, d
 | .config/alacritty/themes/obsidian.toml | Paleta ANSI |
 | .config/fish/ | Prompt nativo, Git, colores y abreviaturas |
 | .config/fastfetch/config.jsonc | Información del equipo con módulos y paleta Obsidian |
+| .config/rofi/ | Lanzador, cambio de ventanas y menú de energía |
+| .config/dunst/dunstrc | Notificaciones Obsidian |
+| .config/picom/picom.conf | Composición GLX, sombras y esquinas |
+| .config/qtile/scripts/power-menu.sh | Menú de sesión/energía con confirmaciones |
+| .config/qtile/wallpapers/obsidian.svg | Fondo vectorial editable, 3440 × 1440 |
 | .bashrc | Fallback Bash opcional |
 
 Las carpetas GTK, estados de Fish, cachés Python y temas históricos no forman parte de esta configuración distribuible.
@@ -44,7 +49,8 @@ Instala Arch Linux + Xorg + Qtile X11 y los paquetes directamente utilizados:
 sudo pacman -S --needed \
   git qtile python-psutil alacritty fish fastfetch \
   ttf-jetbrains-mono-nerd xorg-xrandr xorg-xsetroot \
-  rofi picom dunst network-manager-applet udiskie \
+  rofi picom dunst papirus-icon-theme librsvg \ 
+  i3lock xss-lock network-manager-applet udiskie \
   feh scrot thunar pacman-contrib
 ~~~
 
@@ -63,7 +69,7 @@ git clone https://github.com/mier48/arch-qtile-config.git
 cd arch-qtile-config
 mkdir -p "$HOME/.config"
 stamp=$(date +%Y%m%d-%H%M%S)
-for component in qtile fish alacritty fastfetch; do
+for component in qtile fish alacritty fastfetch rofi dunst picom; do
   if [ -e "$HOME/.config/$component" ]; then
     mv "$HOME/.config/$component" "$HOME/.config/$component.backup.$stamp"
   fi
@@ -71,7 +77,7 @@ for component in qtile fish alacritty fastfetch; do
 done
 ~~~
 
-Este procedimiento sustituye **solo esos cuatro directorios** y mantiene los anteriores como respaldo. No copies todo .config ni sobrescribas .bashrc automáticamente. No se incluyen archivos Fish generados (fish_variables), MIME ni ajustes GTK. Alacritty arranca Fish sin cambiar el login shell global.
+Este procedimiento sustituye **solo esos siete directorios** y mantiene los anteriores como respaldo. No copies todo .config ni sobrescribas .bashrc automáticamente. No se incluyen archivos Fish generados (fish_variables), MIME ni ajustes GTK. Alacritty arranca Fish sin cambiar el login shell global.
 
 ### Sesión Qtile
 
@@ -82,7 +88,7 @@ Este procedimiento sustituye **solo esos cuatro directorios** y mantiene los ant
 exec qtile start
 ~~~
 
-El fondo se carga desde ~/Images/wallpaper/wallpaper-4.jpg si existe; en caso contrario, xsetroot utiliza el color #111820.
+El fondo original está en `.config/qtile/wallpapers/obsidian.svg`. Durante el arranque, `rsvg-convert` lo convierte a 3440 × 1440 y lo guarda en caché (`~/.cache/obsidian/`); `feh` lo adapta a la pantalla. Si falla la conversión, se muestra un fondo sólido #111820. Puedes sustituir el SVG sin alterar la configuración de Qtile.
 
 ## Atajos principales
 
@@ -101,11 +107,26 @@ Super es la tecla Windows/Super.
 | Super + e | Thunar |
 | Super + m | Rofi aplicaciones |
 | Super + Shift + m | Rofi ventanas |
+| Super + Shift + p | Menú Obsidian de energía |
+| Super + Shift + n | Recuperar notificación anterior (Dunst) |
 | Super + s / Super + Shift + s | Captura completa / selección |
 | Super + Ctrl + r | Recargar Qtile |
 | Super + Ctrl + q | Salir de Qtile |
 
 Super + r abre el comando integrado de Qtile. Los demás atajos de apps están en .config/qtile/settings/keys.py.
+
+## Escritorio Obsidian · fase 1
+
+- **Rofi** (`.config/rofi/`): lanzador de aplicaciones (`Super+m`), selector de ventanas (`Super+Shift+m`) y tema Rasi de 720 px con búsqueda central, iconos Papirus-Dark y selección discreta.
+- **Dunst** (`.config/dunst/dunstrc`): notificaciones en la pantalla enfocada, esquinas redondeadas, separación de 9 px, barra de progreso y urgencias codificadas con el color de alerta.
+- **Picom** (`.config/picom/picom.conf`): backend GLX, VSync, sombras suaves y esquinas de 9 px, sin blur ni transparencias forzadas. La composición depende del driver y puede requerir ajustes en NVIDIA.
+- **Fondo Obsidian** (`.config/qtile/wallpapers/obsidian.svg`): vector editable y reproducible; `rsvg-convert` genera una imagen de 3440 × 1440 una sola vez o cuando cambia el SVG. Sin descargas ni dependencias externas durante el arranque.
+- **Menú de energía** (`Super+Shift+p`): bloquear, suspender, cerrar sesión, reiniciar o apagar. Exige confirmación para acciones disruptivas y **no ejecuta entradas arbitrarias**. El bloqueo de sesión usa i3lock; xss-lock garantiza que se invoque al suspender mediante logind.
+- **Barra Qtile**: botón de energía al extremo derecho que abre el mismo menú.
+
+Para probar Dunst: `dunstify "Obsidian" "Notificación de prueba"`. Para probar Rofi: `rofi -show drun`. Para probar Picom: `picom --config ~/.config/picom/picom.conf` (si ya hay otro compositor activo, no ejecutes una segunda instancia).
+
+**Seguridad del bloqueo:** el menú suspende únicamente si detecta xss-lock e i3lock activos. Antes de depender de esta opción, comprueba desde una sesión real que i3lock bloquea y que al reanudar exige autenticación. Este bloqueo es funcional, pero no constituye todavía un tema personalizado de pantalla de bloqueo (fase 2). Los mecanismos de suspensión de otras aplicaciones o de la BIOS no quedan cubiertos por este menú.
 
 ## Fastfetch · Obsidian
 
@@ -126,6 +147,7 @@ Para modificar los colores, mantén consistentes los hexadecimales de **.config/
 python -m compileall -q "$HOME/.config/qtile"
 qtile check -c "$HOME/.config/qtile/config.py"
 sh -n "$HOME/.config/qtile/autostart.sh"
+sh -n "$HOME/.config/qtile/scripts/power-menu.sh"
 find "$HOME/.config/fish" -type f -name '*.fish' -exec fish -n {} \;
 python -m json.tool "$HOME/.config/fastfetch/config.jsonc" > /dev/null
 fastfetch -c "$HOME/.config/fastfetch/config.jsonc" --show-errors
@@ -138,13 +160,13 @@ Abre una ventana de Alacritty para comprobar fuente y renderizado. **No se ha va
 
 - Tema: qtile/themes/obsidian.json, alacritty/themes/obsidian.toml, fish/conf.d/obsidian.fish y fastfetch/config.jsonc.
 - Barra, layouts, grupos, atajos: qtile/settings/.
-- Compositor, notificaciones, red, USB y fondo: qtile/autostart.sh; no duplicar servicios en .xprofile.
+- Compositor, notificaciones, red, USB y fondo: qtile/autostart.sh; archivos separados en picom/, dunst/ y rofi/. No duplicar servicios en .xprofile.
 - Fish genera fish_variables por máquina; se ignora en Git.
 - Bash es opcional: Alacritty inicia Fish directamente.
 - La captura anterior se ha retirado por no representar Obsidian. Añade una captura real al documentar el escritorio.
 
 ## Documentación oficial
 
-[Qtile: instalación](https://docs.qtile.org/en/stable/manual/install/) · [Qtile: widgets](https://docs.qtile.org/en/stable/manual/ref/widgets.html) · [Fish: prompt](https://fishshell.com/docs/current/prompt.html) · [Alacritty: TOML](https://alacritty.org/config-alacritty.html) · [Fastfetch: configuración JSONC](https://github.com/fastfetch-cli/fastfetch/wiki/Configuration)
+[Qtile: instalación](https://docs.qtile.org/en/stable/manual/install/) · [Qtile: widgets](https://docs.qtile.org/en/stable/manual/ref/widgets.html) · [Fish: prompt](https://fishshell.com/docs/current/prompt.html) · [Alacritty: TOML](https://alacritty.org/config-alacritty.html) · [Fastfetch: configuración JSONC](https://github.com/fastfetch-cli/fastfetch/wiki/Configuration) · [Rofi: temas](https://davatorium.github.io/rofi/current/rofi-theme.5/) · [Dunst: documentación](https://dunst-project.org/documentation/) · [Picom: opciones](https://picom.app/)
 
 Este repositorio no incluye un archivo LICENSE; no debe presentarse como licenciado bajo MIT.

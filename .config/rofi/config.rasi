@@ -1,0 +1,18 @@
+/* Obsidian launcher: one visual system for drun, window and dmenu. */
+configuration {
+    modi: "drun,window,run";
+    show-icons: true;
+    icon-theme: "Papirus-Dark";
+    font: "JetBrainsMono Nerd Font 12";
+    terminal: "alacritty";
+    drun-display-format: "{name}";
+    display-drun: "Aplicaciones";
+    display-window: "Ventanas";
+    display-run: "Comandos";
+    matching: "fuzzy";
+    sort: true;
+    disable-history: false;
+    sidebar-mode: false;
+}
+
+@theme "themes/obsidian.rasi"
