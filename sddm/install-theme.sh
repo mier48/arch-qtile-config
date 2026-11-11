@@ -23,7 +23,7 @@ conf="/etc/sddm.conf.d/90-operator-hud.conf"
 for file in "$source_dir/Main.qml" "$source_dir/metadata.desktop" "$source_dir/themes/$theme.conf"; do
     [ -f "$file" ] || { printf 'Falta: %s\n' "$file" >&2; exit 1; }
 done
-command -v sddm-greeter-qt6 >/dev/null 2>&1 || command -v sddm-greeter >/dev/null 2>&1 || {
+command -v sddm >/dev/null 2>&1 || {
     printf '%s\n' 'SDDM no está instalado. Instala sddm (Qt 6) antes de continuar.' >&2
     exit 1
 }
