@@ -349,6 +349,37 @@ journalctl --user -b --no-pager -n 100
 
 Reinicia Qtile con **Super+Ctrl+R** tras aplicar un cambio de configuración validado con `qtile check -c ~/.config/qtile/config.py`. El valor `focus_on_window_activation = "smart"` mejora la gestión de activación de ventanas, pero **no puede resolver un proceso de Firefox congelado ni un fallo de renderizado de NVIDIA**.
 
+## Fastfetch · Operator HUD (estética Neofetch)
+
+Fastfetch reproduce la disposición clásica de **Neofetch** sin sus limitaciones de mantenimiento: **logo ASCII completo de Arch a la izquierda** y resumen del equipo a la derecha, con título `usuario@equipo`, separación horizontal, claves con símbolos Nerd Font, columna de datos alineada y una barra de utilización de RAM. Se han eliminado los tres encabezados numerados anteriores.
+
+Los datos de sistema, kernel, host, tiempo encendido, paquetes, gestor de ventanas, terminal, shell, pantalla, CPU, GPU, RAM y disco se **detectan en tiempo real**: no se fijan valores concretos de hardware. No se hacen consultas de red ni se imprime la IP local o pública.
+
+Existen tres perfiles completos:
+
+- **Obsidian:** `.config/fastfetch/themes/obsidian.jsonc`
+- **Cyberpunk:** `.config/fastfetch/themes/cyberpunk.jsonc`
+- **Darcula:** `.config/fastfetch/themes/darcula.jsonc`
+
+El archivo `~/.config/fastfetch/config.jsonc` contiene la variante actualmente activa; el selector `Super+Shift+T` lo sincroniza con el resto de aplicaciones.
+
+Para previsualizar y diagnosticar:
+
+~~~bash
+fastfetch
+fastfetch --config ~/.config/fastfetch/themes/cyberpunk.jsonc
+fastfetch --config ~/.config/fastfetch/themes/darcula.jsonc
+python -m json.tool ~/.config/fastfetch/config.jsonc >/dev/null
+~~~
+
+En Fish, `sys` se expande a `fastfetch`. Por defecto la configuración actual de Fish muestra Fastfetch una vez al abrir una sesión local interactiva; para desactivarlo:
+
+~~~fish
+set -U FASTFETCH_AUTOSTART 0
+~~~
+
+Para volver a activarlo: `set -U FASTFETCH_AUTOSTART 1`. No se ejecuta automáticamente en SSH y se evita repetirlo en shells Fish anidados. El logo completo ocupa más columnas que el anterior: se recomienda una terminal de **al menos 90 columnas**. Si el equipo usa un terminal estrecho, reduce el ancho de fuente o utiliza un modo compacto temporal (`fastfetch --logo-type small`).
+
 ## 7. Actualizaciones
 
 Desde la raíz del clon local:
