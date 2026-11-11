@@ -1,6 +1,6 @@
 # Arch Linux · Qtile Obsidian
 
-Configuración de **Arch Linux + Qtile (X11) + Alacritty + Fish**, diseñada para productividad con teclado y monitor ultrawide. Un solo lenguaje visual: fondo grafito, texto claro y acento verde azulado.
+Configuración de **Arch Linux + Qtile (X11) + Alacritty + Fish + Fastfetch**, diseñada para productividad con teclado y monitor ultrawide. Un solo lenguaje visual: fondo grafito, texto claro y acento verde azulado.
 
 > Repositorio de dotfiles, no instalador de Arch Linux. No configura drivers NVIDIA, cifrado, display manager, red ni hardening. **Solo Qtile sobre X11**: utiliza xrandr, picom, feh y Systray, no Qtile Wayland.
 
@@ -15,6 +15,7 @@ Configuración de **Arch Linux + Qtile (X11) + Alacritty + Fish**, diseñada par
 | .config/alacritty/alacritty.toml | Terminal TOML y shell Fish |
 | .config/alacritty/themes/obsidian.toml | Paleta ANSI |
 | .config/fish/ | Prompt nativo, Git, colores y abreviaturas |
+| .config/fastfetch/config.jsonc | Información del equipo con módulos y paleta Obsidian |
 | .bashrc | Fallback Bash opcional |
 
 Las carpetas GTK, estados de Fish, cachés Python y temas históricos no forman parte de esta configuración distribuible.
@@ -33,7 +34,7 @@ Las carpetas GTK, estados de Fish, cachés Python y temas históricos no forman 
 
 Qtile: barra de **38 px**, grupos **01–08**, CPU, RAM, tráfico de red y reloj; layouts MonadTall (principal), Bsp, MonadWide y Max, con márgenes de 10 px y foco de 2 px. El widget Net suma las interfaces activas; sin Wi-Fi fijada ni batería.
 
-Alacritty: JetBrainsMono Nerd Font a 12,5 puntos, 0,97 de opacidad, TOML y Fish. Fish: prompt nativo de dos líneas, Git, Python venv, códigos de error, duración y hora. No se ejecuta neofetch automáticamente. Los colores están coordinados, pero **deben sincronizarse manualmente** si cambias la paleta.
+Alacritty: JetBrainsMono Nerd Font a 12,5 puntos, 0,97 de opacidad, TOML y Fish. Fish: prompt nativo de dos líneas, Git, Python venv, códigos de error, duración y hora. Fastfetch se ejecuta con `sys` y, opcionalmente, al iniciar Fish. No se ejecuta automáticamente por defecto. Los colores están coordinados, pero **deben sincronizarse manualmente** si cambias la paleta.
 
 ## Dependencias
 
@@ -41,7 +42,7 @@ Instala Arch Linux + Xorg + Qtile X11 y los paquetes directamente utilizados:
 
 ~~~bash
 sudo pacman -S --needed \
-  git qtile python-psutil alacritty fish \
+  git qtile python-psutil alacritty fish fastfetch \
   ttf-jetbrains-mono-nerd xorg-xrandr xorg-xsetroot \
   rofi picom dunst network-manager-applet udiskie \
   feh scrot thunar pacman-contrib
@@ -50,7 +51,7 @@ sudo pacman -S --needed \
 Opcionales:
 
 ~~~bash
-sudo pacman -S --needed eza zoxide fastfetch brightnessctl
+sudo pacman -S --needed eza zoxide brightnessctl
 ~~~
 
 El applet de red requiere NetworkManager funcionando. El volumen usa pactl y requiere PulseAudio o PipeWire-Pulse. brightnessctl solo funciona en hardware compatible. Los atajos de aplicaciones externas requieren instalar esas aplicaciones.
@@ -62,7 +63,7 @@ git clone https://github.com/mier48/arch-qtile-config.git
 cd arch-qtile-config
 mkdir -p "$HOME/.config"
 stamp=$(date +%Y%m%d-%H%M%S)
-for component in qtile fish alacritty; do
+for component in qtile fish alacritty fastfetch; do
   if [ -e "$HOME/.config/$component" ]; then
     mv "$HOME/.config/$component" "$HOME/.config/$component.backup.$stamp"
   fi
@@ -70,7 +71,7 @@ for component in qtile fish alacritty; do
 done
 ~~~
 
-Este procedimiento sustituye **solo esos tres directorios** y mantiene los anteriores como respaldo. No copies todo .config ni sobrescribas .bashrc automáticamente. No se incluyen archivos Fish generados (fish_variables), MIME ni ajustes GTK. Alacritty arranca Fish sin cambiar el login shell global.
+Este procedimiento sustituye **solo esos cuatro directorios** y mantiene los anteriores como respaldo. No copies todo .config ni sobrescribas .bashrc automáticamente. No se incluyen archivos Fish generados (fish_variables), MIME ni ajustes GTK. Alacritty arranca Fish sin cambiar el login shell global.
 
 ### Sesión Qtile
 
@@ -106,6 +107,19 @@ Super es la tecla Windows/Super.
 
 Super + r abre el comando integrado de Qtile. Los demás atajos de apps están en .config/qtile/settings/keys.py.
 
+## Fastfetch · Obsidian
+
+La configuración reside en **.config/fastfetch/config.jsonc**, se detecta automáticamente al ejecutar `fastfetch` y está integrada con la abreviatura **`sys`** de Fish. Utiliza el logo pequeño de Arch en verde azulado y tres bloques: **Sistema** (SO, kernel, actividad, paquetes), **Entorno** (Qtile, terminal, shell y pantalla) y **Hardware** (modelo, CPU, GPU, memoria y disco raíz). La fila final muestra la paleta ANSI del terminal Alacritty.
+
+- Ejecución puntual: `fastfetch` o `sys` dentro de Fish.
+- Activar al abrir una nueva terminal interactiva: `set -U OBSIDIAN_FASTFETCH_AUTOSTART 1`.
+- Desactivar: `set -U OBSIDIAN_FASTFETCH_AUTOSTART 0`.
+- El inicio automático **está desactivado por defecto**, se omite por SSH y no se repite en shells Fish anidados.
+- No consulta IP pública, tiempo meteorológico ni servicios externos; tampoco utiliza módulos `Command` ni ejecuta procesos arbitrarios. Los valores de hardware se detectan dinámicamente, sin fijar un modelo de CPU o GPU.
+- No almacenes detalles privados del equipo en capturas públicas sin revisarlas.
+
+Para modificar los colores, mantén consistentes los hexadecimales de **.config/fastfetch/config.jsonc** con los temas de Qtile, Alacritty y Fish. Fastfetch utiliza el formato JSONC oficial; el archivo distribuido es JSON estricto válido para facilitar su validación.
+
 ## Comprobaciones
 
 ~~~bash
@@ -113,6 +127,8 @@ python -m compileall -q "$HOME/.config/qtile"
 qtile check -c "$HOME/.config/qtile/config.py"
 sh -n "$HOME/.config/qtile/autostart.sh"
 find "$HOME/.config/fish" -type f -name '*.fish' -exec fish -n {} \;
+python -m json.tool "$HOME/.config/fastfetch/config.jsonc" > /dev/null
+fastfetch -c "$HOME/.config/fastfetch/config.jsonc" --show-errors
 python -c 'import pathlib,tomllib; p=pathlib.Path.home()/".config/alacritty"; [tomllib.loads(f.read_text()) for f in p.rglob("*.toml")]; print("TOML OK")'
 ~~~
 
@@ -120,7 +136,7 @@ Abre una ventana de Alacritty para comprobar fuente y renderizado. **No se ha va
 
 ## Mantenimiento
 
-- Tema: qtile/themes/obsidian.json, alacritty/themes/obsidian.toml y fish/conf.d/obsidian.fish.
+- Tema: qtile/themes/obsidian.json, alacritty/themes/obsidian.toml, fish/conf.d/obsidian.fish y fastfetch/config.jsonc.
 - Barra, layouts, grupos, atajos: qtile/settings/.
 - Compositor, notificaciones, red, USB y fondo: qtile/autostart.sh; no duplicar servicios en .xprofile.
 - Fish genera fish_variables por máquina; se ignora en Git.
@@ -129,6 +145,6 @@ Abre una ventana de Alacritty para comprobar fuente y renderizado. **No se ha va
 
 ## Documentación oficial
 
-[Qtile: instalación](https://docs.qtile.org/en/stable/manual/install/) · [Qtile: widgets](https://docs.qtile.org/en/stable/manual/ref/widgets.html) · [Fish: prompt](https://fishshell.com/docs/current/prompt.html) · [Alacritty: TOML](https://alacritty.org/config-alacritty.html)
+[Qtile: instalación](https://docs.qtile.org/en/stable/manual/install/) · [Qtile: widgets](https://docs.qtile.org/en/stable/manual/ref/widgets.html) · [Fish: prompt](https://fishshell.com/docs/current/prompt.html) · [Alacritty: TOML](https://alacritty.org/config-alacritty.html) · [Fastfetch: configuración JSONC](https://github.com/fastfetch-cli/fastfetch/wiki/Configuration)
 
 Este repositorio no incluye un archivo LICENSE; no debe presentarse como licenciado bajo MIT.
