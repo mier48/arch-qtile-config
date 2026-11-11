@@ -3,6 +3,7 @@
 from pathlib import Path
 import subprocess
 from libqtile import hook
+from libqtile.config import Match
 from settings.keys import mod, keys
 from settings.groups import groups
 from settings.layouts import layouts, floating_layout
@@ -19,7 +20,7 @@ def autostart():
 
 main = None
 dgroups_key_binder = None
-dgroups_app_rules = []
+dgroups_app_rules: list[Match] = []
 follow_mouse_focus = True
 bring_front_click = "floating_only"
 cursor_warp = False
