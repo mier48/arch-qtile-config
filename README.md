@@ -126,6 +126,48 @@ Super es la tecla Windows/Super.
 
 Super + r abre el comando integrado de Qtile. Los demás atajos de apps están en .config/qtile/settings/keys.py.
 
+## Fase 2 · Pantalla de bloqueo y SDDM (seguridad de sesión)
+
+La sesión Qtile X11 se bloquea con **i3lock y xss-lock**; el inicio de sesión gráfico utiliza **SDDM Qt6**. No son intercambiables: SDDM autentica el acceso inicial y i3lock protege la sesión existente.
+
+### Bloqueo X11
+
+- `~/.config/qtile/scripts/lock.sh`: genera una imagen estática sin capturar contenido de ventanas, pantalla o notificaciones. Se usan los temas Obsidian, Cyberpunk y Darcula y fondo sólido si no puede renderizarse la imagen.
+- `xss-lock --transfer-sleep-lock -- /bin/sh ~/.config/qtile/scripts/lock.sh` coordina el bloqueo con systemd-logind. El proceso de i3lock permanece **en primer plano** con `-n`, para no liberar anticipadamente el inhibidor de suspensión.
+- `xset s 600 600` configura el bloqueo automático tras aproximadamente 10 minutos de inactividad X11. Verifica en el equipo real que la detección de inactividad funciona y que otros programas no desactivan XScreenSaver.
+- El menú de energía valida la presencia de los componentes antes de suspender; no garantiza las rutas de suspensión externas ni protege frente a fallos de hardware.
+- El desbloqueo se realiza con la contraseña del usuario mediante PAM utilizado por i3lock. **No se modifica PAM ni se introducen contraseñas en scripts**.
+
+Para comprobarlo manualmente (desde una sesión gráfica activa, después de instalar los nuevos archivos):
+
+~~~bash
+sudo pacman -S --needed i3lock xss-lock librsvg
+sh -n ~/.config/qtile/scripts/lock.sh
+sh ~/.config/qtile/scripts/lock.sh
+~~~
+
+Después comprueba `pgrep -a -u "$USER" xss-lock` y bloquea/desbloquea la sesión. Haz una prueba controlada de suspensión y reanudación con `systemctl suspend`, únicamente cuando hayas verificado que el bloqueo y la autenticación funcionan. **No confíes en la suspensión hasta comprobarlo físicamente.**
+
+### SDDM Qt6
+
+Los archivos del tema están en `sddm/operator-hud/`, con QML nativo, caja de usuario (sin listado de cuentas), contraseña oculta, selector de sesión y controles de reinicio/apagado. Los tres perfiles gráficos tienen idéntica política de autenticación.
+
+El instalador privilegiado está separado de los dotfiles de usuario; instala la variante indicada sin modificar el servicio, sus ficheros PAM, ni activarlo automáticamente:
+
+~~~bash
+sudo pacman -S --needed sddm qt6-declarative qt6-svg
+sudo sh sddm/install-theme.sh obsidian
+# Alternativas:
+# sudo sh sddm/install-theme.sh cyberpunk
+# sudo sh sddm/install-theme.sh darcula
+~~~
+
+Consulta **[sddm/README.md](sddm/README.md)** antes de habilitar SDDM. Prueba el tema mediante el greeter disponible en tu versión y mantén acceso a una TTY. Tras verificarlo y comprobar que no tienes otro display manager activo, la habilitación de `sddm.service` es una decisión administrativa manual.
+
+**Límites de seguridad:** SDDM y el bloqueo de sesión no sustituyen el cifrado LUKS, Secure Boot, una contraseña firmware, ni una configuración segura de reanudación/hibernación. No se configura hibernación automática; el estado de RAM durante suspensión no está cifrado por el simple hecho de usar un bloqueo.
+
+**Cambio de tema:** `Super+Shift+T` cambia el tema de usuario. No puede modificar SDDM (requiere privilegios root); para cambiar el tema del greeter ejecuta explícitamente `sudo sh sddm/install-theme.sh NOMBRE`.
+
 ## Operator HUD · arquitectura de interacción
 
 El diseño **Operator HUD** se basa en los componentes nativos `ScratchPad`, `DropDown`, `GroupBox`, `TaskList` y `CurrentLayout` de Qtile. No es un tema de colores ni un widget pack externo: modifica el modelo de interacción del escritorio.
@@ -222,6 +264,8 @@ sh -n "$HOME/.config/qtile/scripts/power-menu.sh"
 sh -n "$HOME/.config/qtile/scripts/wallpaper.sh"
 sh -n "$HOME/.config/qtile/scripts/theme-menu.sh"
 sh -n "$HOME/.config/qtile/scripts/operator-menu.sh"
+sh -n "$HOME/.config/qtile/scripts/lock.sh"
+sh -n "$HOME/.config/qtile/scripts/lock-preflight.sh"
 python -m py_compile "$HOME/.config/qtile/scripts/theme-switch.py"
 python -m unittest discover -s tests -v
 find "$HOME/.config/fish" -type f -name '*.fish' -exec fish -n {} \;
@@ -247,5 +291,5 @@ Abre una ventana de Alacritty para comprobar fuente y renderizado. **No se ha va
 
 Las comprobaciones de coherencia de los tres perfiles se ejecutan también en GitHub Actions para cada pull request. Esto no sustituye las pruebas de renderizado en una sesión X11 real.
 
-Este repositorio no incluye un archivo LICENSE; no debe presentarse como licenciado bajo MIT.
+Este repositorio no incluye un archivo LICENSE; no debe presentarse como licenciado bajo MIT. Los temas SDDM de este repositorio no modifican la configuración PAM del sistema.
 
