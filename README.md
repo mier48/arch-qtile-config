@@ -382,7 +382,7 @@ Para volver a activarlo: `set -U FASTFETCH_AUTOSTART 1`. No se ejecuta automáti
 
 ## Selector WireGuard en Qtile
 
-En la parte derecha de la barra **Operator HUD** hay un **icono permanente de VPN (`󰖂`) inmediatamente al lado del selector de temas (`󰔎`)**. **Haz clic izquierdo en el icono VPN** para abrir directamente el selector Rofi de WireGuard, igual que haces con el icono de temas. A su lado aparece un estado compacto `WG/NM OFF`, `WG/NM ON (n)` o `WG/NM ?`, actualizado cada **8 segundos** mediante consulta asíncrona. El texto de estado también es clicable. Se mantienen **Super+Shift+V** y **Super+P → WireGuard** como accesos alternativos.
+En la parte derecha de la barra **Operator HUD** hay un **icono permanente de VPN (`󰖂`) inmediatamente al lado del selector de temas (`󰔎`)**. **Haz clic izquierdo en el icono VPN** para abrir directamente el selector Rofi de WireGuard, igual que haces con el icono de temas. No se muestra ningún texto de estado junto al icono y no se realizan consultas periódicas desde la barra. Se mantienen **Super+Shift+V** y **Super+P → WireGuard** como accesos alternativos.
 
 El menú lista **exclusivamente conexiones nativas WireGuard gestionadas por NetworkManager** (`TYPE=wireguard`). Un círculo relleno marca cada perfil activo. Selecciona uno inactivo para conectarlo o uno activo para desconectarlo. Las operaciones usan el **UUID** completo, no el nombre del perfil; no ejecutan una shell ni muestran claves privadas. NetworkManager y Polkit gestionan permisos y secretos.
 
