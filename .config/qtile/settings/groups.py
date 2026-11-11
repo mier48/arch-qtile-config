@@ -1,14 +1,72 @@
-"""Eight numbered groups; labels are visual, names stay 1–8."""
+"""Semantic workspaces and two native, on-demand scratchpads.
 
-from libqtile.config import Group, Key
+Groups retain numeric names so the existing Super+1..8 bindings remain stable.
+The scratchpad group is deliberately hidden from GroupBox.
+"""
+
+from libqtile.config import DropDown, Group, Key, ScratchPad
 from libqtile.lazy import lazy
+
 from .keys import keys, mod
 
-groups = [Group(str(i), label=f"{i:02d}") for i in range(1, 9)]
-for group in groups:
-    keys.extend([
-        Key([mod], group.name, lazy.group[group.name].toscreen(),
-            desc=f"Switch to group {group.name}"),
-        Key([mod, "shift"], group.name, lazy.window.togroup(group.name),
-            desc=f"Move window to group {group.name}"),
-    ])
+
+WORKSPACES = (
+    ("1", "01 DEV"),
+    ("2", "02 WEB"),
+    ("3", "03 DATA"),
+    ("4", "04 OPS"),
+    ("5", "05 LAB"),
+    ("6", "06 COMMS"),
+    ("7", "07 DOCS"),
+    ("8", "08 MISC"),
+)
+
+groups = [Group(name, label=label) for name, label in WORKSPACES]
+
+groups.append(
+    ScratchPad(
+        "scratchpad",
+        [
+            DropDown(
+                "terminal",
+                "alacritty",
+                x=0.18, y=0.12, width=0.64, height=0.66,
+                opacity=1.0, on_focus_lost_hide=True, warp_pointer=False,
+            ),
+            DropDown(
+                "monitor",
+                "alacritty -e btop",
+                x=0.13, y=0.10, width=0.74, height=0.76,
+                opacity=1.0, on_focus_lost_hide=True, warp_pointer=False,
+            ),
+        ],
+        label="",
+        single=True,
+    )
+)
+
+for name, _label in WORKSPACES:
+    keys.extend(
+        [
+            Key([mod], name, lazy.group[name].toscreen(), desc=f"Go to workspace {name}"),
+            Key(
+                [mod, "shift"], name, lazy.window.togroup(name),
+                desc=f"Move window to workspace {name}",
+            ),
+        ]
+    )
+
+keys.extend(
+    [
+        Key(
+            [mod], "grave",
+            lazy.group["scratchpad"].dropdown_toggle("terminal"),
+            desc="Toggle scratchpad terminal",
+        ),
+        Key(
+            [mod, "shift"], "grave",
+            lazy.group["scratchpad"].dropdown_toggle("monitor"),
+            desc="Toggle btop system dashboard",
+        ),
+    ]
+)

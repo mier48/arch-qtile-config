@@ -1,4 +1,4 @@
-"""Ultrawide-friendly layouts and the Obsidian focus border."""
+"""Operator HUD layouts: readable three-pane ultrawide workspaces."""
 
 from libqtile import layout
 from libqtile.config import Match
@@ -9,11 +9,12 @@ layout_conf = {
     "border_focus": colors["focus"],
     "border_normal": colors["grey"],
     "border_width": 2,
-    "margin": 10,
+    "margin": 12,
 }
 
 layouts = [
-    layout.MonadTall(ratio=0.56, **layout_conf),
+    layout.MonadTall(ratio=0.57, **layout_conf),
+    layout.Columns(num_columns=3, **layout_conf),
     layout.Bsp(**layout_conf),
     layout.MonadWide(**layout_conf),
     layout.Max(),
