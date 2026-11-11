@@ -150,6 +150,15 @@ def right_widgets(primary=False):
             padding=12,
         ),
         widget.TextBox(
+            text="󰔎",
+            font=FONT,
+            fontsize=16,
+            foreground=C["color4"],
+            background=C["dark"],
+            padding=10,
+            mouse_callbacks={"Button1": lazy.spawn("/bin/sh ~/.config/qtile/scripts/theme-menu.sh")},
+        ),
+        widget.TextBox(
             text="⏻",
             font=FONT,
             fontsize=18,

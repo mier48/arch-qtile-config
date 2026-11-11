@@ -15,4 +15,4 @@ configuration {
     sidebar-mode: false;
 }
 
-@theme "themes/obsidian.rasi"
+@theme "themes/active.rasi"

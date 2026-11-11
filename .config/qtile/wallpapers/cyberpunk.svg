@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="3440" height="1440" viewBox="0 0 3440 1440">
+<defs><linearGradient id="bg" x2="1" y2="1"><stop stop-color="#0B101B"/><stop offset="1" stop-color="#171429"/></linearGradient>
+<linearGradient id="panel" x2="0.7" y2="1"><stop stop-color="#24203A"/><stop offset="1" stop-color="#0B101B"/></linearGradient></defs>
+<rect width="3440" height="1440" fill="url(#bg)"/>
+<g stroke="#3B3455" stroke-width="2" opacity=".19"><path d="M0 430H3440M0 800H3440M0 1170H3440M1200 0V1440M1900 0V1440M2600 0V1440"/></g>
+<path d="M1370 1450 2500 160 3450 210 3450 1440Z" fill="url(#panel)"/>
+<path d="M1500 1440 2600 280 3440 280" fill="none" stroke="#36DCE5" stroke-width="4" opacity=".8"/>
+<path d="M1810 1440 2790 490 3440 490" fill="none" stroke="#FF4FA3" stroke-width="4" opacity=".75"/>
+<path d="M2300 70 3000 740 3440 740" fill="none" stroke="#A48BFF" opacity=".4" stroke-width="3"/>
+<path d="M2700 120 3100 120 3440 410" fill="none" stroke="#36DCE5" opacity=".26" stroke-width="2"/>
+<path d="M3020 160h140m-70-70v140" fill="none" stroke="#FF4FA3" stroke-width="3" opacity=".7"/>
+</svg>

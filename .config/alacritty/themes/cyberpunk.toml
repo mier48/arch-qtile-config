@@ -1,0 +1,48 @@
+# Cyberpunk ANSI palette: consistent with ~/.config/qtile/themes/obsidian.json.
+[colors]
+draw_bold_text_with_bright_colors = false
+
+[colors.primary]
+background = "#0B101B"
+foreground = "#D9D1EC"
+bright_foreground = "#F5EAFF"
+
+[colors.normal]
+black = "#171429"
+red = "#FF647D"
+green = "#36DCE5"
+yellow = "#FAD879"
+blue = "#64CFFF"
+magenta = "#C7A1FF"
+cyan = "#36DCE5"
+white = "#D9D1EC"
+
+[colors.bright]
+black = "#3B3455"
+red = "#FF9EAE"
+green = "#8CF6FB"
+yellow = "#FFE6A1"
+blue = "#A1E6FF"
+magenta = "#DDC4FF"
+cyan = "#8CF6FB"
+white = "#F5EAFF"
+
+[colors.cursor]
+text = "#0B101B"
+cursor = "#36DCE5"
+
+[colors.vi_mode_cursor]
+text = "#0B101B"
+cursor = "#FAD879"
+
+[colors.selection]
+text = "#F5EAFF"
+background = "#3B3455"
+
+[colors.search.matches]
+foreground = "#0B101B"
+background = "#FAD879"
+
+[colors.search.focused_match]
+foreground = "#0B101B"
+background = "#36DCE5"

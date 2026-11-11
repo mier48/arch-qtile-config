@@ -1,0 +1,109 @@
+{
+  "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
+  "logo": {
+    "type": "small",
+    "source": "arch",
+    "color": {
+      "1": "#6A8759"
+    },
+    "padding": {
+      "top": 1,
+      "right": 4
+    }
+  },
+  "display": {
+    "separator": "  ",
+    "color": {
+      "keys": "#6A8759",
+      "title": "#E8E8E8",
+      "output": "#A9B7C6",
+      "separator": "#4E5254"
+    },
+    "key": {
+      "width": 12
+    },
+    "showErrors": false
+  },
+  "modules": [
+    {
+      "type": "custom",
+      "key": "01  SISTEMA",
+      "keyColor": "#6A8759",
+      "format": "────────────────────"
+    },
+    {
+      "type": "os",
+      "key": "Sistema"
+    },
+    {
+      "type": "kernel",
+      "key": "Kernel"
+    },
+    {
+      "type": "uptime",
+      "key": "Actividad"
+    },
+    {
+      "type": "packages",
+      "key": "Paquetes"
+    },
+    "break",
+    {
+      "type": "custom",
+      "key": "02  ENTORNO",
+      "keyColor": "#6A8759",
+      "format": "────────────────────"
+    },
+    {
+      "type": "wm",
+      "key": "Ventanas"
+    },
+    {
+      "type": "terminal",
+      "key": "Terminal"
+    },
+    {
+      "type": "shell",
+      "key": "Shell"
+    },
+    {
+      "type": "display",
+      "key": "Pantalla"
+    },
+    "break",
+    {
+      "type": "custom",
+      "key": "03  HARDWARE",
+      "keyColor": "#6A8759",
+      "format": "────────────────────"
+    },
+    {
+      "type": "host",
+      "key": "Equipo"
+    },
+    {
+      "type": "cpu",
+      "key": "Procesador",
+      "format": "{name}"
+    },
+    {
+      "type": "gpu",
+      "key": "Gráfica",
+      "format": "{name}"
+    },
+    {
+      "type": "memory",
+      "key": "Memoria"
+    },
+    {
+      "type": "disk",
+      "key": "Disco",
+      "folders": "/"
+    },
+    "break",
+    {
+      "type": "colors",
+      "symbol": "circle"
+    }
+  ]
+}

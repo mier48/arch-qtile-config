@@ -44,6 +44,7 @@ keys = [
 
     Key([mod], "e", lazy.spawn("thunar")),
     Key([mod], "m", lazy.spawn("rofi -show drun")),
+    Key([mod, "shift"], "t", lazy.spawn("/bin/sh ~/.config/qtile/scripts/theme-menu.sh")),
     Key([mod, "shift"], "p", lazy.spawn("/bin/sh ~/.config/qtile/scripts/power-menu.sh")),
     Key([mod, "shift"], "n", lazy.spawn("dunstctl history-pop")),
     Key([mod, "shift"], "m", lazy.spawn("rofi -show window")),
