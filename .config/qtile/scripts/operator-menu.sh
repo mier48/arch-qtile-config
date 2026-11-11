@@ -11,7 +11,7 @@ choice=$(printf '%s\n' \
     '04  Monitor del sistema' \
     '05  Archivos' \
     '06  Temas' \
-    '07  VPN' \
+    '07  WireGuard' \
     '08  Notificaciones' \
     '09  Comando' \
     '10  Energía' |

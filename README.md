@@ -380,31 +380,39 @@ set -U FASTFETCH_AUTOSTART 0
 
 Para volver a activarlo: `set -U FASTFETCH_AUTOSTART 1`. No se ejecuta automáticamente en SSH y se evita repetirlo en shells Fish anidados. El logo completo ocupa más columnas que el anterior: se recomienda una terminal de **al menos 90 columnas**. Si el equipo usa un terminal estrecho, reduce el ancho de fuente o utiliza un modo compacto temporal (`fastfetch --logo-type small`).
 
-## Selector VPN en Qtile
+## Selector WireGuard en Qtile
 
-La barra **Operator HUD** incluye un indicador interactivo `VPN OFF`, `VPN ON (n)` o `VPN ?`, actualizado cada **8 segundos** mediante una consulta asíncrona. Haz clic en él o pulsa **Super+Shift+V** para abrir el selector Rofi. También está en **Super+P → VPN**.
+El indicador de la barra **Operator HUD** muestra `WG/NM OFF`, `WG/NM ON (n)` o `WG/NM ?` y se actualiza cada **8 segundos** mediante una consulta asíncrona. Haz clic en él o utiliza **Super+Shift+V** o **Super+P → WireGuard** para abrir el selector Rofi.
 
-El menú muestra los perfiles `vpn` (por ejemplo, OpenVPN) y `wireguard` **gestionados por NetworkManager**. Los perfiles activos se distinguen por un círculo relleno; seleccionar uno desconectado lo conecta y seleccionar uno activo lo desconecta. No guarda credenciales ni requiere `sudo`: NetworkManager y Polkit aplican los permisos correspondientes. Para evitar errores por nombres duplicados o caracteres especiales, se identifica cada conexión por **UUID** sin interpolarlo en una shell. La operación tiene timeout y muestra un aviso si falla.
+El menú lista **exclusivamente conexiones nativas WireGuard gestionadas por NetworkManager** (`TYPE=wireguard`). Un círculo relleno marca cada perfil activo. Selecciona uno inactivo para conectarlo o uno activo para desconectarlo. Las operaciones usan el **UUID** completo, no el nombre del perfil; no ejecutan una shell ni muestran claves privadas. NetworkManager y Polkit gestionan permisos y secretos.
 
-**Dependencias:** `networkmanager`, `nmcli` (incluido con NetworkManager), `rofi` y opcionalmente `dunstify`. Para importar perfiles **OpenVPN** necesitas el plugin `networkmanager-openvpn`:
+### Importar un túnel WireGuard existente
+
+NetworkManager dispone de soporte nativo para WireGuard: **no necesitas OpenVPN ni `networkmanager-openvpn`**. Si tienes un archivo de configuración de WireGuard (por ejemplo `~/vpn/mi-tunel.conf`), impórtalo así:
 
 ~~~bash
-sudo pacman -S --needed networkmanager-openvpn
-nmcli connection import type openvpn file /ruta/tu-perfil.ovpn
+sudo pacman -S --needed wireguard-tools networkmanager
+nmcli connection import type wireguard file "$HOME/vpn/mi-tunel.conf"
+nmcli -f NAME,UUID,TYPE connection show
 ~~~
 
-Los perfiles **WireGuard** creados o importados en NetworkManager también aparecen; las configuraciones levantadas exclusivamente con `wg-quick` no son visibles para este selector. Si utilizas Proton VPN, importa su perfil en NetworkManager siguiendo sus instrucciones (no almacenes claves privadas en el repositorio).
+El archivo `.conf` contiene habitualmente la clave privada del cliente. Protégelo con permisos restrictivos, no lo subas al repositorio ni lo expongas en registros. Tras verificar que la conexión importada funciona, elimina las copias que ya no necesites siguiendo tu política de gestión de secretos.
 
-Comprueba las conexiones y su estado:
+**Importante:** si levantas tus túneles con `wg-quick up` o `wg-quick@nombre.service`, esos túneles **no se controlan con este selector**. Debes elegir un único gestor para cada interfaz: importa la configuración en NetworkManager y evita mantener simultáneamente `wg-quick` sobre el mismo túnel. El indicador `WG/NM OFF` solo significa que **NetworkManager no tiene ningún perfil WireGuard activo**, no que el equipo carezca de otros túneles.
+
+### Diagnóstico y límites de seguridad
 
 ~~~bash
 nmcli -f NAME,UUID,TYPE connection show
 nmcli -f NAME,UUID,TYPE connection show --active
-python ~/.config/qtile/scripts/vpn-menu.py --status
-python ~/.config/qtile/scripts/vpn-menu.py
+python "$HOME/.config/qtile/scripts/vpn-menu.py" --status
+python "$HOME/.config/qtile/scripts/vpn-menu.py"
+sudo wg show
 ~~~
 
-**Privacidad y seguridad:** el indicador solo refleja VPN administradas por NetworkManager. `VPN ON` **no verifica** IP pública, rutas, DNS, fugas IPv6, kill switch ni que todo el tráfico se esté enviando por el túnel. El menú tampoco implementa por sí mismo un kill switch: una desconexión puede devolver el tráfico a la red normal. Valida las rutas/DNS y configura una política de bloqueo de tráfico independiente si la necesitas. No muestres UUID y nombres de VPN en capturas públicas si son sensibles.
+`wg show` permite inspeccionar túneles del kernel, incluidos los ajenos a NetworkManager, pero no se usa para modificarlos desde este menú.
+
+**WG/NM ON no garantiza privacidad ni anonimato.** No valida la IP de salida, la tabla de rutas, DNS, fugas IPv6 ni un kill switch. Una desconexión puede devolver el tráfico a la red normal. Si necesitas bloquear todo tráfico fuera del túnel, implementa y comprueba una política de firewall/killswitch independiente antes de utilizarlo.
 
 ## 7. Actualizaciones
 
@@ -470,7 +478,7 @@ Después reinicia SDDM o el equipo cuando sea seguro hacerlo. Consulta **sddm/RE
 | Super+P | Menú Operator HUD |
 | Super+M / Super+Shift+M | Lanzador / lista de ventanas |
 | Super+Shift+T | Selector de temas |
-| Super+Shift+V | Selector VPN de NetworkManager |
+| Super+Shift+V | Selector WireGuard (NetworkManager) |
 | Super+Shift+P | Menú de energía y bloqueo |
 | Super+E | Thunar |
 | Super+S / Super+Shift+S | Captura completa / área |
