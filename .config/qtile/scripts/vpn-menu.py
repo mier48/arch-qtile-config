@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-"""Rofi VPN selector for NetworkManager profiles.
+"""Rofi WireGuard selector for NetworkManager-managed profiles.
 
-Only VPN and WireGuard NetworkManager profiles are shown. All mutations use
-profile UUIDs as argv (never a shell), with no secrets or network requests.
+Only native WireGuard NetworkManager connections are supported. wg-quick
+interfaces are intentionally not controlled, to avoid two competing managers.
+All mutations use UUID argv (never a shell); no keys or secrets are logged.
 """
 from __future__ import annotations
 
@@ -14,7 +15,7 @@ import sys
 from dataclasses import dataclass
 
 UUID = re.compile(r"^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$")
-VPN_TYPES = {"vpn", "wireguard"}
+WIREGUARD_TYPE = "wireguard"
 
 
 @dataclass(frozen=True)
@@ -52,7 +53,7 @@ def ids(active: bool = False) -> dict[str, str]:
     found = {}
     for line in result.stdout.splitlines():
         parts = line.split(":", 1)
-        if len(parts) == 2 and UUID.fullmatch(parts[0]) and parts[1].strip() in VPN_TYPES:
+        if len(parts) == 2 and UUID.fullmatch(parts[0]) and parts[1].strip() == WIREGUARD_TYPE:
             found[parts[0].lower()] = parts[1].strip()
     return found
 
@@ -74,14 +75,14 @@ def profiles() -> list[Profile]:
 def status() -> str:
     try:
         count = len(ids(active=True))
-        return f"VPN  ON ({count})" if count else "VPN  OFF"
+        return f"WG/NM  ON ({count})" if count else "WG/NM  OFF"
     except (OSError, RuntimeError, subprocess.TimeoutExpired):
-        return "VPN  ?"
+        return "WG/NM  ?"
 
 
 def rofi(options: list[str]) -> str | None:
     process = subprocess.run(
-        ["rofi", "-dmenu", "-i", "-no-custom", "-p", "VPN",
+        ["rofi", "-dmenu", "-i", "-no-custom", "-p", "WIREGUARD",
          "-theme-str", "window { width: 600px; } listview { lines: 9; }"],
         input="\n".join(options) + "\n",
         text=True, capture_output=True, check=False, timeout=120,
@@ -93,21 +94,21 @@ def rofi(options: list[str]) -> str | None:
 
 def menu() -> int:
     if not shutil.which("nmcli") or not shutil.which("rofi"):
-        notify("VPN", "Necesitas NetworkManager (nmcli) y Rofi.", critical=True)
+        notify("WireGuard", "Necesitas NetworkManager (nmcli) y Rofi.", critical=True)
         return 1
     try:
         available = profiles()
     except (OSError, RuntimeError, subprocess.TimeoutExpired):
-        notify("VPN", "No se pueden consultar los perfiles de NetworkManager.", critical=True)
+        notify("WireGuard", "No se pueden consultar los perfiles de NetworkManager.", critical=True)
         return 1
 
     if not available:
-        notify("VPN", "No hay perfiles VPN/WireGuard importados en NetworkManager.")
+        notify("WireGuard", "No hay perfiles WireGuard en NetworkManager. Importa tu .conf; wg-quick no se gestiona aquí.")
         return 0
 
     # Stable index selects a UUID, not a potentially malicious or duplicate name.
     options = [
-        ("●" if p.active else "○") + f"  {p.name[:60]}  [{p.type.upper()}]  ·  {p.uuid}"
+        ("●" if p.active else "○") + f"  {p.name[:60]}  ·  {p.uuid}"
         for p in available
     ]
     choice = rofi(options)
@@ -120,14 +121,14 @@ def menu() -> int:
         "--wait", "30", "connection", action, "uuid", selected.uuid, timeout=38
     )
     if result.returncode:
-        notify("VPN", "No se pudo cambiar la VPN. Consulta NetworkManager o el agente de autenticación.", critical=True)
+        notify("WireGuard", "No se pudo cambiar el túnel. Revisa NetworkManager o Polkit.", critical=True)
         return 1
-    notify("VPN", ("Desconectada: " if selected.active else "Conectada: ") + selected.name[:80])
+    notify("WireGuard", ("Desconectado: " if selected.active else "Conectado: ") + selected.name[:80])
     return 0
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Selector VPN NetworkManager para Qtile")
+    parser = argparse.ArgumentParser(description="Selector WireGuard de NetworkManager para Qtile")
     parser.add_argument("--status", action="store_true", help="Estado breve para Qtile")
     args = parser.parse_args()
     if args.status:

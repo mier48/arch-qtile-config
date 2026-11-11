@@ -160,10 +160,10 @@ def vpn_widget():
         shell=False,
         update_interval=8,
         font=FONT,
-        fontsize=11,
-        foreground=C["focus"],
+        fontsize=10,
+        foreground=C["inactive"],
         background=C["dark"],
-        padding=10,
+        padding=5,
         mouse_callbacks={"Button1": lazy.spawn(VPN)},
     )
 
@@ -185,7 +185,6 @@ def controls(primary):
             ),
         ])
     if primary:
-        result.extend([separator(), vpn_widget()])
         result.extend([
             separator(),
             widget.Systray(
@@ -204,6 +203,11 @@ def controls(primary):
     if primary:
         result.extend([
             action("󰔎", THEMES, foreground=C["color4"], size=16),
+            # Permanent clickable VPN icon (Nerd Fonts md-vpn, U+F0582).
+            # Uses the same action widget as the theme chooser.
+            action("󰖂", VPN, foreground=C["color4"], size=16),
+            # Compact live NetworkManager WireGuard state beside the icon.
+            vpn_widget(),
             action("⏻", POWER, foreground=C["focus"], size=18, padding=15),
         ])
     return result

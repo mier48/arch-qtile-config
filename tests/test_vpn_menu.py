@@ -1,4 +1,4 @@
-"""Regression tests for the NetworkManager VPN picker (no VPN connection needed)."""
+"""Regression tests for native WireGuard connections in NetworkManager."""
 import importlib.util
 import pathlib
 import sys
@@ -20,7 +20,7 @@ class VPNMenuTests(unittest.TestCase):
     def test_parses_uuid_and_type_only(self):
         with patch.object(vpn, "command", return_value=CompletedProcess([], 0,
                 f"{A}:vpn\n{B}:wireguard\n00000000-aaaa-4444-bbbb-123456789abc:802-3-ethernet\ninvalid:vpn\n", "")):
-            self.assertEqual(vpn.ids(), {A: "vpn", B: "wireguard"})
+            self.assertEqual(vpn.ids(), {B: "wireguard"})
 
     def test_profile_names_not_used_as_shell_commands(self):
         calls = []
@@ -34,15 +34,16 @@ class VPNMenuTests(unittest.TestCase):
 
         with patch.object(vpn, "command", side_effect=fake):
             profiles = vpn.profiles()
-        self.assertEqual(len(profiles), 2)
+        self.assertEqual(len(profiles), 1)
         self.assertTrue(profiles[0].active)
         self.assertIn("$(touch", profiles[0].name)
+        self.assertEqual(profiles[0].type, "wireguard")
         self.assertTrue(all("uuid" in args for args in calls if "-g" in args))
 
     def test_selected_profile_by_full_uuid_and_no_shell(self):
         available = [
-            vpn.Profile(A, "VPN; rm -rf ~", "vpn", False),
-            vpn.Profile(B, "VPN; rm -rf ~", "wireguard", True),
+            vpn.Profile(A, "WG; rm -rf ~", "wireguard", False),
+            vpn.Profile(B, "WG; rm -rf ~", "wireguard", True),
         ]
         with patch.object(vpn, "profiles", return_value=available), \
              patch.object(vpn, "rofi", side_effect=lambda opts: opts[0]), \
@@ -57,11 +58,23 @@ class VPNMenuTests(unittest.TestCase):
 
     def test_status_active_and_unavailable(self):
         with patch.object(vpn, "ids", return_value={A: "vpn"}):
-            self.assertEqual(vpn.status(), "VPN  ON (1)")
+            self.assertEqual(vpn.status(), "WG/NM  ON (1)")
         with patch.object(vpn, "ids", return_value={}):
-            self.assertEqual(vpn.status(), "VPN  OFF")
+            self.assertEqual(vpn.status(), "WG/NM  OFF")
         with patch.object(vpn, "ids", side_effect=RuntimeError()):
-            self.assertEqual(vpn.status(), "VPN  ?")
+            self.assertEqual(vpn.status(), "WG/NM  ?")
+
+    def test_toolbar_has_clickable_vpn_icon_next_to_theme_icon(self):
+        widgets = (SCRIPT.parents[1] / "settings/widgets.py").read_text()
+        themes = widgets.index('action("󰔎", THEMES')
+        vpn_icon = widgets.index('action("󰖂", VPN')
+        state = widgets.index('vpn_widget(),', vpn_icon)
+        power = widgets.index('action("⏻", POWER')
+        self.assertLess(themes, vpn_icon)
+        self.assertLess(vpn_icon, state)
+        self.assertLess(state, power)
+        self.assertIn('mouse_callbacks={"Button1": lazy.spawn(command)}', widgets)
+        self.assertEqual(widgets.count("vpn_widget()"), 2)  # def + primary bar
 
     def test_qtile_integration(self):
         root = SCRIPT.parents[1]
@@ -72,7 +85,7 @@ class VPNMenuTests(unittest.TestCase):
         self.assertIn('"--status"', widgets)
         self.assertIn('vpn_widget()', widgets)
         self.assertIn('vpn-menu.py', keys)
-        self.assertIn("'07  VPN'", operator)
+        self.assertIn("'07  WireGuard'", operator)
 
 
 if __name__ == "__main__":
