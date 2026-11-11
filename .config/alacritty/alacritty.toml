@@ -1,7 +1,7 @@
 # Alacritty Obsidian — modern TOML configuration (Alacritty >= 0.13).
 # Theme colors are separated to match Qtile / Fish.
 [general]
-import = ["themes/obsidian.toml"]
+import = ["themes/active.toml"]
 live_config_reload = true
 
 [terminal]

@@ -1,0 +1,48 @@
+# Obsidian ANSI palette: consistent with ~/.config/qtile/themes/obsidian.json.
+[colors]
+draw_bold_text_with_bright_colors = false
+
+[colors.primary]
+background = "#111820"
+foreground = "#C9D6E1"
+bright_foreground = "#EDF3F8"
+
+[colors.normal]
+black = "#18232E"
+red = "#E78991"
+green = "#82CDBE"
+yellow = "#E7C78F"
+blue = "#8FAFD1"
+magenta = "#C3AADF"
+cyan = "#82CDBE"
+white = "#C9D6E1"
+
+[colors.bright]
+black = "#35434F"
+red = "#F2A1A8"
+green = "#A6E4D8"
+yellow = "#F0D9AC"
+blue = "#B2CAEA"
+magenta = "#D8C2EC"
+cyan = "#A6E4D8"
+white = "#EDF3F8"
+
+[colors.cursor]
+text = "#111820"
+cursor = "#82CDBE"
+
+[colors.vi_mode_cursor]
+text = "#111820"
+cursor = "#E7C78F"
+
+[colors.selection]
+text = "#EDF3F8"
+background = "#35434F"
+
+[colors.search.matches]
+foreground = "#111820"
+background = "#E7C78F"
+
+[colors.search.focused_match]
+foreground = "#111820"
+background = "#82CDBE"

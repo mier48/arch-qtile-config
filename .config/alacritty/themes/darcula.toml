@@ -1,0 +1,48 @@
+# Darcula ANSI palette: consistent with ~/.config/qtile/themes/selected-theme.json.
+[colors]
+draw_bold_text_with_bright_colors = false
+
+[colors.primary]
+background = "#2B2B2B"
+foreground = "#A9B7C6"
+bright_foreground = "#E8E8E8"
+
+[colors.normal]
+black = "#313335"
+red = "#BC3F3C"
+green = "#6A8759"
+yellow = "#FFC66D"
+blue = "#6897BB"
+magenta = "#9876AA"
+cyan = "#6A8759"
+white = "#A9B7C6"
+
+[colors.bright]
+black = "#4E5254"
+red = "#E07B79"
+green = "#89B77F"
+yellow = "#FFD794"
+blue = "#8DB8D6"
+magenta = "#BD9ED0"
+cyan = "#89B77F"
+white = "#E8E8E8"
+
+[colors.cursor]
+text = "#2B2B2B"
+cursor = "#CC7832"
+
+[colors.vi_mode_cursor]
+text = "#2B2B2B"
+cursor = "#FFC66D"
+
+[colors.selection]
+text = "#E8E8E8"
+background = "#4E5254"
+
+[colors.search.matches]
+foreground = "#2B2B2B"
+background = "#FFC66D"
+
+[colors.search.focused_match]
+foreground = "#2B2B2B"
+background = "#6A8759"

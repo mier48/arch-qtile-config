@@ -4,7 +4,7 @@ set -u
 
 error() {
     if command -v dunstify >/dev/null 2>&1; then
-        dunstify -u critical "Obsidian · Energía" "$1"
+        dunstify -u critical "Tema · Energía" "$1"
     else
         printf '%s\n' "$1" >&2
     fi
@@ -27,7 +27,7 @@ choice=$(printf '%s\n' \
 case "$choice" in
     'Bloquear sesión')
         if command -v i3lock >/dev/null 2>&1; then
-            i3lock -c 111820 || error "No se pudo bloquear."
+            /bin/sh "$HOME/.config/qtile/scripts/lock.sh" || error "No se pudo bloquear."
         else
             error "Bloqueo no disponible: instala i3lock."
         fi

@@ -30,3 +30,11 @@ if status is-interactive
     set -g fish_pager_color_selected_completion EDF3F8
     set -g fish_pager_color_selected_description C9D6E1
 end
+
+# Shared prompt colors (Obsidian)
+set -g __theme_muted 778895
+set -g __theme_accent 82CDBE
+set -g __theme_alert E78991
+set -g __theme_warning E7C78F
+set -g __theme_secondary A8BED3
+set -g __theme_python C3AADF
