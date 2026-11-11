@@ -24,12 +24,13 @@ if status is-interactive
         # System overview: uses ~/.config/fastfetch/config.jsonc by default.
         abbr --add sys 'fastfetch'
 
-        # Explicit opt-in: set -U OBSIDIAN_FASTFETCH_AUTOSTART 1
-        # Do not run in SSH or repeat in nested Fish shells.
-        if set -q OBSIDIAN_FASTFETCH_AUTOSTART
-            if test "$OBSIDIAN_FASTFETCH_AUTOSTART" = 1
-                if not set -q SSH_CONNECTION; and not set -q OBSIDIAN_FASTFETCH_SHOWN
-                    set -gx OBSIDIAN_FASTFETCH_SHOWN 1
+        # Show system summary by default in interactive local shells.
+        # Disable explicitly: set -U FASTFETCH_AUTOSTART 0
+        # Never run in SSH or nested Fish processes.
+        if not set -q SSH_CONNECTION; and not set -q SSH_TTY
+            if not set -q FASTFETCH_SHOWN
+                if not set -q FASTFETCH_AUTOSTART; or test "$FASTFETCH_AUTOSTART" != 0
+                    set -gx FASTFETCH_SHOWN 1
                     command fastfetch
                 end
             end

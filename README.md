@@ -249,6 +249,39 @@ Este selector actualiza Qtile, Alacritty, Fish, Fastfetch, Rofi, Dunst, Picom y 
 
 **El tema de SDDM es una configuración privilegiada independiente**. Cambiar el tema del usuario no actualiza automáticamente SDDM. Para cambiarlo, vuelve a ejecutar el instalador SDDM con sudo tras probar la nueva variante.
 
+## SDDM Cyberpunk y Fastfetch en Fish
+
+Si el escritorio está en Cyberpunk pero SDDM aparece en Obsidian, recuerda que el greeter es independiente del tema de usuario. Tras instalar la versión actualizada del repositorio, desde su raíz ejecuta:
+
+~~~bash
+sudo sh sddm/install-theme.sh cyberpunk
+# O selecciona expresamente el mismo tema que tiene Qtile:
+sudo sh sddm/install-theme.sh --from-qtile
+sh sddm/install-theme.sh --current
+~~~
+
+El script instala una variante de `operator-hud` con el `theme.conf` correcto (sección `[General]`), establece la opción `[Theme] Current` y avisa si encuentra posibles overrides. Puedes probar Cyberpunk con:
+
+~~~bash
+sddm-greeter-qt6 --test-mode --theme /usr/share/sddm/themes/operator-cyberpunk
+~~~
+
+No se modifican las reglas PAM ni se habilitan servicios automáticamente. Consulta [sddm/README.md](sddm/README.md) si el greeter sigue mostrando el tema anterior.
+
+**Fastfetch** ahora se ejecuta automáticamente en terminales Fish interactivas locales, excepto sesiones SSH y shells secundarios que ya lo mostraron. No se ejecuta en Fish no interactivo. Para desactivarlo:
+
+~~~fish
+set -U FASTFETCH_AUTOSTART 0
+~~~
+
+Para volver a activarlo:
+
+~~~fish
+set -U FASTFETCH_AUTOSTART 1
+~~~
+
+El acceso rápido `sys` sigue disponible cuando Fastfetch está instalado. Tras actualizar `~/.config/fish/config.fish`, abre una nueva terminal Alacritty para comprobar el arranque.
+
 ## 6. Bloqueo, suspensión y autenticación
 
 La pantalla de bloqueo protege una sesión que **ya está abierta**; SDDM se limita al inicio de sesión. No compartas ni sustituyas sus mecanismos de autenticación.

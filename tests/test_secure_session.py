@@ -53,13 +53,26 @@ class SecureSessionTests(unittest.TestCase):
         for name in ("obsidian", "cyberpunk", "darcula"):
             path = SDDM / "themes" / (name + ".conf")
             self.assertTrue(path.is_file())
-            values = dict(line.split("=", 1) for line in path.read_text().splitlines())
+            palette = configparser.ConfigParser()
+            palette.read(path)
+            self.assertIn("General", palette)
+            values = dict(palette["General"])
             self.assertEqual(set(values), {
                 "background", "panel", "foreground", "accent",
                 "muted", "border", "error"
             })
             for value in values.values():
                 self.assertRegex(value, r"^#[0-9A-Fa-f]{6}$")
+
+    def test_sddm_cyberpunk_accent_and_fish_autostart(self):
+        palette = configparser.ConfigParser()
+        palette.read(SDDM / "themes" / "cyberpunk.conf")
+        self.assertEqual(palette["General"]["accent"], "#FF4FA3")
+        fish = (ROOT / ".config" / "fish" / "config.fish").read_text()
+        self.assertIn("command fastfetch", fish)
+        self.assertIn("FASTFETCH_AUTOSTART", fish)
+        self.assertIn("status is-interactive", fish)
+        self.assertIn("SSH_CONNECTION", fish)
 
     def test_installer_does_not_change_pam_or_enable_services(self):
         script = (ROOT / "sddm" / "install-theme.sh").read_text()
