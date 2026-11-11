@@ -1,0 +1,43 @@
+# Alacritty Obsidian — modern TOML configuration (Alacritty >= 0.13).
+# Theme colors are separated to match Qtile / Fish.
+[general]
+import = ["themes/obsidian.toml"]
+live_config_reload = true
+
+[terminal]
+shell = { program = "/usr/bin/fish" }
+# Prevent terminal escape sequences from changing the system clipboard.
+osc52 = "Disabled"
+
+[window]
+decorations = "None"
+opacity = 0.97
+dynamic_padding = false
+dynamic_title = true
+padding = { x = 14, y = 12 }
+
+[scrolling]
+history = 20000
+multiplier = 3
+
+[font]
+size = 12.5
+normal = { family = "JetBrainsMono Nerd Font", style = "Regular" }
+bold = { family = "JetBrainsMono Nerd Font", style = "Bold" }
+italic = { family = "JetBrainsMono Nerd Font", style = "Italic" }
+bold_italic = { family = "JetBrainsMono Nerd Font", style = "Bold Italic" }
+offset = { x = 0, y = 1 }
+
+[cursor]
+style = { shape = "Beam", blinking = "Off" }
+unfocused_hollow = true
+thickness = 0.2
+
+[mouse]
+hide_when_typing = true
+
+[selection]
+save_to_clipboard = false
+
+[bell]
+duration = 0
