@@ -27,7 +27,9 @@
   "modules": [
     {
       "type": "custom",
-      "format": "{##82CDBE}01  SISTEMA{#}  {##35434F}────────────────────{#}"
+      "key": "01  SISTEMA",
+      "keyColor": "#82CDBE",
+      "format": "────────────────────"
     },
     {
       "type": "os",
@@ -48,7 +50,9 @@
     "break",
     {
       "type": "custom",
-      "format": "{##82CDBE}02  ENTORNO{#}  {##35434F}────────────────────{#}"
+      "key": "02  ENTORNO",
+      "keyColor": "#82CDBE",
+      "format": "────────────────────"
     },
     {
       "type": "wm",
@@ -69,7 +73,9 @@
     "break",
     {
       "type": "custom",
-      "format": "{##82CDBE}03  HARDWARE{#}  {##35434F}────────────────────{#}"
+      "key": "03  HARDWARE",
+      "keyColor": "#82CDBE",
+      "format": "────────────────────"
     },
     {
       "type": "host",
