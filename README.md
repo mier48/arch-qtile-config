@@ -161,13 +161,14 @@ El instalador admite también **cyberpunk** y **darcula**. Crea una variante del
 Prueba primero el tema mediante el greeter de tu versión de SDDM:
 
 ~~~bash
-ls /usr/lib/sddm/sddm-greeter* 2>/dev/null
+command -v sddm-greeter-qt6
+pacman -Ql sddm | grep '/sddm-greeter'
 ~~~
 
-Normalmente el ejecutable Qt6 estará en \`/usr/lib/sddm/sddm-greeter-qt6\`. Prueba su opción **--test-mode** con la ruta del tema instalado:
+En Arch Linux, el ejecutable Qt6 está en \`/usr/bin/sddm-greeter-qt6\`. Prueba su opción **--test-mode** con la ruta del tema instalado:
 
 ~~~bash
-/usr/lib/sddm/sddm-greeter-qt6 --test-mode --theme /usr/share/sddm/themes/operator-obsidian
+sddm-greeter-qt6 --test-mode --theme /usr/share/sddm/themes/operator-obsidian
 ~~~
 
 Comprueba la ruta disponible en tu versión y utiliza \`--help\` si difiere. Si has instalado otra variante, ajusta **operator-obsidian** al nombre correspondiente. El modo de prueba **no autentica realmente contra PAM**.
