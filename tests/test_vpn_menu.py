@@ -64,26 +64,24 @@ class VPNMenuTests(unittest.TestCase):
         with patch.object(vpn, "ids", side_effect=RuntimeError()):
             self.assertEqual(vpn.status(), "WG/NM  ?")
 
-    def test_toolbar_has_clickable_vpn_icon_next_to_theme_icon(self):
+    def test_toolbar_contains_only_vpn_icon(self):
         widgets = (SCRIPT.parents[1] / "settings/widgets.py").read_text()
         themes = widgets.index('action("󰔎", THEMES')
         vpn_icon = widgets.index('action("󰖂", VPN')
-        state = widgets.index('vpn_widget(),', vpn_icon)
         power = widgets.index('action("⏻", POWER')
         self.assertLess(themes, vpn_icon)
-        self.assertLess(vpn_icon, state)
-        self.assertLess(state, power)
+        self.assertLess(vpn_icon, power)
         self.assertIn('mouse_callbacks={"Button1": lazy.spawn(command)}', widgets)
-        self.assertEqual(widgets.count("vpn_widget()"), 2)  # def + primary bar
+        self.assertNotIn('vpn_widget()', widgets)
+        self.assertNotIn('GenPollCommand(', widgets)
 
     def test_qtile_integration(self):
         root = SCRIPT.parents[1]
         widgets = (root / "settings/widgets.py").read_text()
         keys = (root / "settings/keys.py").read_text()
         operator = (root / "scripts/operator-menu.sh").read_text()
-        self.assertIn("widget.GenPollCommand(", widgets)
-        self.assertIn('"--status"', widgets)
-        self.assertIn('vpn_widget()', widgets)
+        self.assertIn('action("󰖂", VPN', widgets)
+        self.assertNotIn("GenPollCommand(", widgets)
         self.assertIn('vpn-menu.py', keys)
         self.assertIn("'07  WireGuard'", operator)
 

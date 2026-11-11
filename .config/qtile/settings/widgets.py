@@ -153,21 +153,6 @@ def telemetry():
         ),
     ]
 
-def vpn_widget():
-    # Poll in background; NetworkManager delays must not stall Qtile's UI.
-    return widget.GenPollCommand(
-        cmd=[sys.executable, str(VPN_SCRIPT), "--status"],
-        shell=False,
-        update_interval=8,
-        font=FONT,
-        fontsize=10,
-        foreground=C["inactive"],
-        background=C["dark"],
-        padding=5,
-        mouse_callbacks={"Button1": lazy.spawn(VPN)},
-    )
-
-
 def controls(primary):
     result = []
     if primary and which("checkupdates"):
@@ -207,7 +192,6 @@ def controls(primary):
             # Uses the same action widget as the theme chooser.
             action("󰖂", VPN, foreground=C["color4"], size=16),
             # Compact live NetworkManager WireGuard state beside the icon.
-            vpn_widget(),
             action("⏻", POWER, foreground=C["focus"], size=18, padding=15),
         ])
     return result
