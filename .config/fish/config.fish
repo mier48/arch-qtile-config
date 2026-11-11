@@ -21,7 +21,19 @@ if status is-interactive
     end
 
     if type -q fastfetch
+        # System overview: uses ~/.config/fastfetch/config.jsonc by default.
         abbr --add sys 'fastfetch'
+
+        # Explicit opt-in: set -U OBSIDIAN_FASTFETCH_AUTOSTART 1
+        # Do not run in SSH or repeat in nested Fish shells.
+        if set -q OBSIDIAN_FASTFETCH_AUTOSTART
+            if test "$OBSIDIAN_FASTFETCH_AUTOSTART" = 1
+                if not set -q SSH_CONNECTION; and not set -q OBSIDIAN_FASTFETCH_SHOWN
+                    set -gx OBSIDIAN_FASTFETCH_SHOWN 1
+                    command fastfetch
+                end
+            end
+        end
     end
 
     if type -q zoxide
