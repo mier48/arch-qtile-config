@@ -274,6 +274,47 @@ journalctl -b --no-pager -n 100
 
 Para hibernación hacen falta configuración de swap, reanudación e initramfs; **no está implementada aquí**. Un bloqueo de pantalla tampoco cifra la memoria RAM ni sustituye LUKS2.
 
+## Diagnóstico: Firefox abre, pero no responde a clics o teclado
+
+La política de foco de Qtile es `focus_on_window_activation = "smart"`: Firefox puede solicitar foco si está en el grupo visible. Las ventanas flotantes se mantienen por encima y un clic las trae al frente; los escritorios y layouts originales se conservan. **No se ha identificado todavía una causa única del problema**: hay que distinguir foco incorrecto, compositor y fallo interno de Firefox.
+
+### Aislamiento sin modificar archivos
+
+**1. Comprueba el compositor.** Con Firefox abierto, ejecuta:
+
+~~~bash
+pkill -x picom
+~~~
+
+Si Firefox vuelve a responder, el origen probable está en Picom/GLX/driver y no en las reglas de Qtile. Puedes probar la sesión sin compositor y revisar `picom --log-level=debug --config ~/.config/picom/picom.conf` desde una terminal, con una sola instancia activa. No desactives la aceleración de Firefox ni fuerces variables de entorno de X11/Wayland sin antes aislar esta causa.
+
+**2. Comprueba el foco.** Abre una terminal, ejecuta:
+
+~~~bash
+xprop -root _NET_ACTIVE_WINDOW
+xprop WM_CLASS
+~~~
+
+El segundo comando te permitirá seleccionar visualmente una ventana de Firefox. Si falta `xprop`, instálalo mediante `sudo pacman -S --needed xorg-xprop`. También puedes consultar `qtile cmd-obj -o window -f info` según la versión instalada.
+
+**3. Comprueba Firefox sin perfil habitual**, solo para diagnosticar:
+
+~~~bash
+firefox --ProfileManager
+~~~
+
+Crea un perfil temporal de prueba sin modificar el habitual; evita ejecutar dos instancias con el mismo perfil a la vez. Si el navegador funciona con un perfil nuevo, revisa extensiones, preferencias y aceleración de Firefox antes de atribuir el problema a Qtile.
+
+**4. Comprueba registros y versión:**
+
+~~~bash
+qtile --version
+pacman -Q firefox qtile picom
+journalctl --user -b --no-pager -n 100
+~~~
+
+Reinicia Qtile con **Super+Ctrl+R** tras aplicar un cambio de configuración validado con `qtile check -c ~/.config/qtile/config.py`. El valor `focus_on_window_activation = "smart"` mejora la gestión de activación de ventanas, pero **no puede resolver un proceso de Firefox congelado ni un fallo de renderizado de NVIDIA**.
+
 ## 7. Actualizaciones
 
 Desde la raíz del clon local:
