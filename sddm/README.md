@@ -17,12 +17,32 @@ Desde la raíz del repositorio:
 
 ```bash
 sudo pacman -S --needed sddm qt6-declarative qt6-svg
-sudo sh sddm/install-theme.sh obsidian
+sudo sh sddm/install-theme.sh cyberpunk
 ```
 
-Cambia `obsidian` por `cyberpunk` o `darcula` para instalar cualquiera. El instalador crea `/usr/share/sddm/themes/operator-TEMA/` y `/etc/sddm.conf.d/90-operator-hud.conf` (con copia de seguridad cuando existe). **No habilita SDDM, no reinicia la sesión y no cambia PAM.**
+Cambia `cyberpunk` por `obsidian` o `darcula` para instalar cualquiera. Cada perfil tiene un `theme.conf` con sección `[General]`, que es la que lee `config` en el QML de SDDM. El instalador crea `/usr/share/sddm/themes/operator-TEMA/` y `/etc/sddm.conf.d/90-operator-hud.conf` (con copia de seguridad cuando existe). **No habilita SDDM, no reinicia la sesión y no cambia PAM.**
 
 No ejecutes el instalador desde una ruta ajena o un repositorio que no hayas revisado; es un script con privilegios de administrador.
+
+## Sincronizar SDDM con Qtile
+
+El tema de SDDM **no se cambia automáticamente** desde `Super+Shift+T`: SDDM es un proceso privilegiado independiente de la sesión del usuario.
+
+Desde la raíz del repositorio puedes instalar explícitamente el tema que has seleccionado en Qtile:
+
+```sh
+sudo sh sddm/install-theme.sh --from-qtile
+```
+
+Para ver el override que ha creado el instalador:
+
+```sh
+sh sddm/install-theme.sh --current
+cat /etc/sddm.conf.d/90-operator-hud.conf
+cat /usr/share/sddm/themes/operator-cyberpunk/theme.conf
+```
+
+Espera `Current=operator-cyberpunk` y una sección `[General]` con `accent=#FF4FA3` cuando Cyberpunk esté seleccionado. El selector no modifica automáticamente SDDM para evitar elevar privilegios desde el escritorio. Si alguna otra configuración define `[Theme] Current`, comprueba su prioridad con `sddm --example-config` y revisa `/etc/sddm.conf` y `/etc/sddm.conf.d/`.
 
 ## Prueba sin modificar la sesión
 
@@ -37,7 +57,7 @@ sddm-greeter-qt6 --help
 Prueba el tema de forma aislada en una sesión gráfica de prueba (puede requerir Xephyr y los módulos Qt6 correspondientes según versión):
 
 ```bash
-sddm-greeter-qt6 --test-mode --theme /usr/share/sddm/themes/operator-obsidian
+sddm-greeter-qt6 --test-mode --theme /usr/share/sddm/themes/operator-cyberpunk
 ```
 
 En Arch Linux, el ejecutable Qt6 se encuentra en `/usr/bin/sddm-greeter-qt6`. En algunas versiones se utiliza `sddm-greeter --test-mode --theme RUTA`. Consulta `sddm-greeter --help` para la sintaxis de tu versión. El modo de prueba no comprueba autenticación real, PAM ni logind.
