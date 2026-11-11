@@ -1,9 +1,19 @@
-"""Qtile shortcuts: consistent Vim directions, keyboard-first workflow."""
+"""Qtile Operator HUD shortcuts: keyboard-first window control."""
+
+import shlex
+from pathlib import Path
 
 from libqtile.config import Key
 from libqtile.lazy import lazy
 
 mod = "mod4"
+
+SCRIPTS = Path.home() / ".config" / "qtile" / "scripts"
+
+
+def script(name):
+    return f"/bin/sh {shlex.quote(str(SCRIPTS / name))}"
+
 
 keys = [
     # Focus and cycle through windows.
@@ -32,7 +42,7 @@ keys = [
     Key([mod], "w", lazy.window.kill()),
     Key([mod, "control"], "r", lazy.reload_config()),
     Key([mod, "control"], "q", lazy.shutdown()),
-    Key([mod], "r", lazy.spawncmd()),
+    Key([mod], "r", lazy.spawn("rofi -show run")),
 
     Key([mod], "a", lazy.spawn("android-studio")),
     Key([mod], "b", lazy.spawn("firefox")),
@@ -42,10 +52,18 @@ keys = [
     Key([mod], "o", lazy.spawn("libreoffice")),
     Key([mod], "t", lazy.spawn("qbittorrent")),
 
+    # Operator HUD / window state / navigation.
+    Key([mod], "p", lazy.spawn(script("operator-menu.sh"))),
+    Key([mod], "f", lazy.window.toggle_fullscreen()),
+    Key([mod, "shift"], "space", lazy.window.toggle_floating()),
+    Key([mod], "Escape", lazy.screen.toggle_group()),
+    Key([mod], "bracketleft", lazy.screen.prev_group()),
+    Key([mod], "bracketright", lazy.screen.next_group()),
+
     Key([mod], "e", lazy.spawn("thunar")),
     Key([mod], "m", lazy.spawn("rofi -show drun")),
-    Key([mod, "shift"], "t", lazy.spawn("/bin/sh ~/.config/qtile/scripts/theme-menu.sh")),
-    Key([mod, "shift"], "p", lazy.spawn("/bin/sh ~/.config/qtile/scripts/power-menu.sh")),
+    Key([mod, "shift"], "t", lazy.spawn(script("theme-menu.sh"))),
+    Key([mod, "shift"], "p", lazy.spawn(script("power-menu.sh"))),
     Key([mod, "shift"], "n", lazy.spawn("dunstctl history-pop")),
     Key([mod, "shift"], "m", lazy.spawn("rofi -show window")),
 

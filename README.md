@@ -1,6 +1,6 @@
-# Arch Linux · Qtile Obsidian
+# Arch Linux · Qtile Operator HUD
 
-Configuración de **Arch Linux + Qtile (X11) + Alacritty + Fish + Fastfetch + Rofi + Dunst + Picom**, diseñada para productividad con teclado y monitor ultrawide. Tres temas intercambiables — **Obsidian** (grafito y verde azulado), **Cyberpunk** (grafito profundo, cian y magenta) y **Darcula** (gris JetBrains, naranja y verde)— en los componentes del escritorio.
+Configuración de **Arch Linux + Qtile (X11) + Alacritty + Fish + Fastfetch + Rofi + Dunst + Picom**, con interfaz **Operator HUD**: productividad orientada al teclado, barra de información contextual, espacios de trabajo semánticos y terminal desplegable, optimizada para ultrawide. Tres temas intercambiables — **Obsidian** (grafito y verde azulado), **Cyberpunk** (grafito profundo, cian y magenta) y **Darcula** (gris JetBrains, naranja y verde)— en los componentes del escritorio.
 
 > Repositorio de dotfiles, no instalador de Arch Linux. No configura drivers NVIDIA, cifrado, display manager, red ni hardening. **Solo Qtile sobre X11**: utiliza xrandr, picom, feh y Systray, no Qtile Wayland.
 
@@ -39,7 +39,7 @@ Las carpetas GTK, estados de Fish, cachés Python y temas históricos no forman 
 | Acento/foco | #82CDBE |
 | Alerta | #E78991 |
 
-Qtile: barra de **38 px**, grupos **01–08**, CPU, RAM, tráfico de red y reloj; layouts MonadTall (principal), Bsp, MonadWide y Max, con márgenes de 10 px y foco de 2 px. El widget Net suma las interfaces activas; sin Wi-Fi fijada ni batería.
+Qtile: barra **Operator HUD de 44 px**, espacios **01 DEV, 02 WEB, 03 DATA, 04 OPS, 05 LAB, 06 COMMS, 07 DOCS y 08 MISC**, lista de ventanas con foco, layout activo, CPU, RAM, red y reloj; layouts MonadTall (principal), Columns, Bsp, MonadWide y Max, con márgenes de 12 px y foco de 2 px. El widget Net suma las interfaces activas; sin Wi-Fi fijada ni batería.
 
 Alacritty: JetBrainsMono Nerd Font a 12,5 puntos, 0,97 de opacidad, TOML y Fish. Fish: prompt nativo de dos líneas, Git, Python venv, códigos de error, duración y hora. Fastfetch se ejecuta con `sys` y, opcionalmente, al iniciar Fish. No se ejecuta automáticamente por defecto. Cada tema dispone de perfiles versionados para los componentes; el selector sincroniza los archivos activos. Si modificas una paleta, actualiza el perfil de cada aplicación correspondiente.
 
@@ -51,7 +51,7 @@ Instala Arch Linux + Xorg + Qtile X11 y los paquetes directamente utilizados:
 sudo pacman -S --needed \
   git qtile python-psutil alacritty fish fastfetch \
   ttf-jetbrains-mono-nerd xorg-xrandr xorg-xsetroot \
-  rofi picom dunst papirus-icon-theme librsvg \ 
+  rofi picom dunst papirus-icon-theme librsvg \
   i3lock xss-lock network-manager-applet udiskie \
   feh scrot thunar pacman-contrib
 ~~~
@@ -59,7 +59,7 @@ sudo pacman -S --needed \
 Opcionales:
 
 ~~~bash
-sudo pacman -S --needed eza zoxide brightnessctl
+sudo pacman -S --needed eza zoxide brightnessctl btop
 ~~~
 
 El applet de red requiere NetworkManager funcionando. El volumen usa pactl y requiere PulseAudio o PipeWire-Pulse. brightnessctl solo funciona en hardware compatible. Los atajos de aplicaciones externas requieren instalar esas aplicaciones.
@@ -99,6 +99,13 @@ Super es la tecla Windows/Super.
 | Atajo | Acción |
 | --- | --- |
 | Super + Enter | Alacritty + Fish |
+| Super + ` | Terminal scratchpad desplegable |
+| Super + Shift + ` | Panel btop desplegable (requiere btop) |
+| Super + p | Menú Operator HUD con acciones rápidas |
+| Super + f | Alternar pantalla completa |
+| Super + Shift + Espacio | Alternar ventana flotante |
+| Super + [ / ] | Grupo anterior / siguiente |
+| Super + Escape | Volver al grupo anterior |
 | Super + 1…8 | Cambiar grupo |
 | Super + Shift + 1…8 | Mover ventana al grupo |
 | Super + h/j/k/l | Izquierda/abajo/arriba/derecha |
@@ -115,8 +122,29 @@ Super es la tecla Windows/Super.
 | Super + s / Super + Shift + s | Captura completa / selección |
 | Super + Ctrl + r | Recargar Qtile |
 | Super + Ctrl + q | Salir de Qtile |
+| Super + r | Ejecutar comando mediante Rofi |
 
 Super + r abre el comando integrado de Qtile. Los demás atajos de apps están en .config/qtile/settings/keys.py.
+
+## Operator HUD · arquitectura de interacción
+
+El diseño **Operator HUD** se basa en los componentes nativos `ScratchPad`, `DropDown`, `GroupBox`, `TaskList` y `CurrentLayout` de Qtile. No es un tema de colores ni un widget pack externo: modifica el modelo de interacción del escritorio.
+
+- **Barra flotante modular (44 px)**: acceso al menú de operador, escritorios semánticos, layout actual, selector interactivo de ventanas, métricas de CPU/RAM/red y zona de notificaciones, temas y energía. La lista de ventanas destaca la enfocada y permite activarlas mediante clic.
+- **Diseño ultrawide**: `MonadTall` con proporción 0,57 para separar editor y herramientas; `Columns` proporciona tres columnas de trabajo y `Bsp` particiones flexibles. `Max` permite concentración sin eliminar las ventanas.
+- **Scratchpad terminal**: `Super + \`` despliega Alacritty sobre el grupo actual; se oculta al perder foco. `Super + Shift + \`` abre una segunda terminal flotante con `btop` (opcional).
+- **Menú de operador**: `Super + P` abre un menú Rofi de acciones permitidas: aplicaciones, ventanas, terminal, monitorización, archivos, cambio de tema, historial de notificaciones, comandos y energía.
+- **Pantallas secundarias**: la barra utiliza una disposición reducida por debajo de 1800 píxeles, preservando grupos, reloj y controles básicos. Cada monitor construye sus propias instancias de widgets.
+- **Compatibilidad**: los atajos existentes de aplicaciones, capturas y gestión de temas siguen disponibles. Cyberpunk, Darcula y Obsidian mantienen la misma estructura y solo alteran colores/fondo.
+- **Privacidad**: el menú de operador no ejecuta instrucciones suministradas por el usuario. La opción explícita «Comando» utiliza el lanzador Rofi existente y debe tratarse como una interfaz para ejecutar comandos voluntariamente.
+
+Para una instalación completa de monitorización opcional:
+
+~~~bash
+sudo pacman -S --needed btop
+~~~
+
+El panel btop no aparece automáticamente ni añade un daemon en segundo plano; se crea cuando se invoca su atajo.
 
 ## Escritorio Obsidian · fase 1
 
@@ -193,6 +221,7 @@ sh -n "$HOME/.config/qtile/autostart.sh"
 sh -n "$HOME/.config/qtile/scripts/power-menu.sh"
 sh -n "$HOME/.config/qtile/scripts/wallpaper.sh"
 sh -n "$HOME/.config/qtile/scripts/theme-menu.sh"
+sh -n "$HOME/.config/qtile/scripts/operator-menu.sh"
 python -m py_compile "$HOME/.config/qtile/scripts/theme-switch.py"
 python -m unittest discover -s tests -v
 find "$HOME/.config/fish" -type f -name '*.fish' -exec fish -n {} \;
@@ -214,7 +243,7 @@ Abre una ventana de Alacritty para comprobar fuente y renderizado. **No se ha va
 
 ## Documentación oficial
 
-[Qtile: instalación](https://docs.qtile.org/en/stable/manual/install/) · [Qtile: widgets](https://docs.qtile.org/en/stable/manual/ref/widgets.html) · [Fish: prompt](https://fishshell.com/docs/current/prompt.html) · [Alacritty: TOML](https://alacritty.org/config-alacritty.html) · [Fastfetch: configuración JSONC](https://github.com/fastfetch-cli/fastfetch/wiki/Configuration) · [Rofi: temas](https://davatorium.github.io/rofi/current/rofi-theme.5/) · [Dunst: documentación](https://dunst-project.org/documentation/) · [Picom: opciones](https://picom.app/)
+[Qtile: instalación](https://docs.qtile.org/en/stable/manual/install/) · [Qtile: grupos y ScratchPad](https://docs.qtile.org/en/stable/manual/config/groups.html) · [Qtile: widgets](https://docs.qtile.org/en/stable/manual/ref/widgets.html) · [Fish: prompt](https://fishshell.com/docs/current/prompt.html) · [Alacritty: TOML](https://alacritty.org/config-alacritty.html) · [Fastfetch: configuración JSONC](https://github.com/fastfetch-cli/fastfetch/wiki/Configuration) · [Rofi: temas](https://davatorium.github.io/rofi/current/rofi-theme.5/) · [Dunst: documentación](https://dunst-project.org/documentation/) · [Picom: opciones](https://picom.app/)
 
 Las comprobaciones de coherencia de los tres perfiles se ejecutan también en GitHub Actions para cada pull request. Esto no sustituye las pruebas de renderizado en una sesión X11 real.
 
