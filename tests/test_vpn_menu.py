@@ -67,12 +67,13 @@ class VPNMenuTests(unittest.TestCase):
     def test_toolbar_contains_only_vpn_icon(self):
         widgets = (SCRIPT.parents[1] / "settings/widgets.py").read_text()
         themes = widgets.index('action("󰔎", THEMES')
-        vpn_icon = widgets.index('action("󰖂", VPN')
+        vpn_icon = widgets.index('vpn_indicator(),')
         power = widgets.index('action("⏻", POWER')
-        self.assertLess(themes, vpn_icon)
+        self.assertLess(themes, power)
         self.assertLess(vpn_icon, power)
         self.assertIn('mouse_callbacks={"Button1": lazy.spawn(command)}', widgets)
-        self.assertNotIn('vpn_widget()', widgets)
+        self.assertIn('return widget.GenPollText(', widgets)
+        self.assertIn('󰖂', widgets)
         self.assertNotIn('GenPollCommand(', widgets)
 
     def test_qtile_integration(self):
@@ -80,7 +81,7 @@ class VPNMenuTests(unittest.TestCase):
         widgets = (root / "settings/widgets.py").read_text()
         keys = (root / "settings/keys.py").read_text()
         operator = (root / "scripts/operator-menu.sh").read_text()
-        self.assertIn('action("󰖂", VPN', widgets)
+        self.assertIn('vpn_indicator()', widgets)
         self.assertNotIn("GenPollCommand(", widgets)
         self.assertIn('vpn-menu.py', keys)
         self.assertIn("'07  WireGuard'", operator)

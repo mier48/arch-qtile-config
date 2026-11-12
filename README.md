@@ -34,7 +34,7 @@ sudo pacman -Syu
 
 ~~~bash
 sudo pacman -S --needed \
-  git python sudo qtile python-psutil \
+  git python sudo qtile python-psutil python-aiohttp \
   xorg-server xorg-xauth xorg-xinit xorg-xrandr xorg-xset xorg-xsetroot \
   alacritty fish fastfetch rofi picom dunst \
   ttf-jetbrains-mono-nerd noto-fonts papirus-icon-theme \
@@ -58,7 +58,7 @@ No instales dos servidores de audio alternativos si ya utilizas PulseAudio o una
 Opcionales según uso:
 
 ~~~bash
-sudo pacman -S --needed btop eza zoxide brightnessctl
+sudo pacman -S --needed btop eza zoxide brightnessctl lm_sensors
 ~~~
 
 El panel desplegable de monitorización utiliza **btop**; las otras utilidades enriquecen Fish o gestionan el brillo cuando el hardware lo permite. Firefox, VS Code, Android Studio, GIMP, LibreOffice, qBittorrent y otras apps tienen atajos definidos, pero **no se instalan automáticamente**.
@@ -281,6 +281,55 @@ set -U FASTFETCH_AUTOSTART 1
 ~~~
 
 El acceso rápido `sys` sigue disponible cuando Fastfetch está instalado. Tras actualizar `~/.config/fish/config.fish`, abre una nueva terminal Alacritty para comprobar el arranque.
+
+## Operator HUD 2.0: VPN, barra contextual y telemetría local
+
+Estas funciones utilizan las paletas existentes de **Obsidian**, **Cyberpunk** y **Darcula** y mantienen el comportamiento del menú WireGuard.
+
+### VPN: el mismo icono con estado real
+
+El icono **󰖂** permanece visible en la barra principal. Se muestra **gris** cuando no hay WireGuard activo y en el **acento del tema** cuando NetworkManager comunica una conexión WireGuard activa. Si NetworkManager no responde se deja gris y el popup indica estado desconocido; nunca se interpreta como conexión protegida.
+
+- **Clic izquierdo**: menú WireGuard existente (sin cambio de funcionalidad).
+- **Clic derecho**: panel de red con interfaz Ethernet/Wi-Fi, conectividad y estado WireGuard.
+- El estado se consulta localmente mediante \`nmcli\`, sin contactar con servicios para conocer la IP pública. **Solo refleja conexiones WireGuard gestionadas por NetworkManager**; no sustituye un kill switch, una auditoría DNS o la detección de fugas.
+
+### WidgetBox
+
+El botón plegable **󰅂** agrupa datos de red, CPU/RAM/temperaturas y actualizaciones. El conjunto comienza cerrado y puede expandirse pulsando el botón; los widgets siguen actualizándose aunque estén ocultos. El icono de telemetría **󰍛** abre el panel avanzado.
+
+### Popups qtile-extras
+
+Con \`qtile-extras\` instalado, el panel de red muestra el estado de NetworkManager y el panel de sistema muestra métricas de CPU, RAM, temperatura de CPU, utilización y temperatura de GPU NVIDIA y VRAM. El panel de sistema incluye gráficas de CPU/RAM generadas con widgets nativos de Qtile.
+
+La versión de **qtile-extras debe corresponder con la versión instalada de Qtile**. En Arch se distribuye como paquete AUR \`qtile-extras\`; **no** se debe instalar \`qtile-extras-git\` sobre Qtile estable ni modificar el Python del sistema con \`sudo pip\`.
+
+~~~bash
+pacman -Q qtile python-psutil python-aiohttp
+# Con tu ayudante AUR habitual, si lo utilizas:
+yay -S qtile-extras
+~~~
+
+Si no utilizas un ayudante AUR, descarga el PKGBUILD de \`qtile-extras\`, revísalo y construye el paquete con \`makepkg -si\` como usuario normal. Si no instalas qtile-extras, Qtile y el estado de VPN continúan funcionando y los clics de popup muestran una notificación informativa.
+
+### Datos y rendimiento
+
+- Estado de red: consulta local a NetworkManager cada 10 segundos, con tiempo límite.
+- CPU, RAM y temperatura CPU: \`psutil\`; consulta de la RTX 3080 con \`nvidia-smi\`, sin elevar privilegios.
+- Las consultas se ejecutan en widgets de sondeo en segundo plano y comparten una caché con TTL; los popups leen solo los valores disponibles, sin esperar a un subprocess.
+- Si \`nvidia-smi\` o los sensores del procesador no están disponibles, se indica **—**. Ninguna lectura ausente se convierte artificialmente en 0.
+- No se crean daemons nuevos ni se realizan solicitudes HTTP.
+
+Verificación en una sesión X11:
+
+~~~bash
+qtile check -c ~/.config/qtile/config.py
+nmcli -t -f UUID,TYPE connection show --active
+nvidia-smi --query-gpu=utilization.gpu,temperature.gpu,memory.used --format=csv,noheader,nounits
+python -m unittest discover -s tests -v
+~~~
+
+Los tests validan el estado conectado/desconectado/desconocido, la lectura de GPU, el color y los callbacks del icono y el funcionamiento de la caché. Debes probar visualmente el popup y la barra en tu sesión Qtile X11; no se pueden validar solo con CI.
 
 ## 6. Bloqueo, suspensión y autenticación
 
