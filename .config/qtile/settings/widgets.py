@@ -13,6 +13,8 @@ from libqtile import widget
 from libqtile.lazy import lazy
 
 from .theme import colors as C
+from . import system_state as state
+from .popups import show_network_popup, show_system_popup
 
 FONT = "JetBrainsMono Nerd Font"
 SCRIPTS = Path.home() / ".config" / "qtile" / "scripts"
@@ -131,78 +133,96 @@ def layout_status():
         ),
     ]
 
-def telemetry():
-    return [
-        widget.CPU(
-            font=FONT, fontsize=11,
-            format="CPU {load_percent:.0f}%",
-            foreground=C["text"], background=C["dark"],
-            update_interval=3, padding=8,
+def vpn_indicator():
+    """Original VPN icon: theme accent when WireGuard is active, grey otherwise."""
+    def icon_markup():
+        vpn = state.network_state().vpn
+        color = C["focus"] if vpn is True else C["inactive"]
+        return f'<span foreground="{color}">󰖂</span>'
+
+    return widget.GenPollText(
+        func=icon_markup, font=FONT, fontsize=16,
+        foreground=C["inactive"], background=C["dark"],
+        padding=11, update_interval=10, markup=True,
+        mouse_callbacks={
+            "Button1": lazy.spawn(VPN),
+            "Button3": lazy.function(show_network_popup),
+        },
+    )
+
+
+def system_button():
+    return widget.TextBox(
+        text="󰍛", font=FONT, fontsize=16,
+        foreground=C["focus"], background=C["dark"],
+        padding=11, mouse_callbacks={"Button1": lazy.function(show_system_popup)},
+    )
+
+
+def context_box():
+    children = [
+        widget.GenPollText(
+            func=lambda: state.network_label(state.network_state()),
+            font=FONT, fontsize=11, foreground=C["text"],
+            background=C["dark"], padding=8, update_interval=10,
         ),
-        widget.Memory(
-            font=FONT, fontsize=11,
-            format="RAM {MemPercent:.0f}%",
-            foreground=C["text"], background=C["dark"],
-            update_interval=5, padding=8,
-        ),
-        widget.Net(
-            font=FONT, fontsize=11,
-            interface=None,
-            format="↓{down:.0f}{down_suffix}/s  ↑{up:.0f}{up_suffix}/s",
-            foreground=C["text"], background=C["dark"],
-            update_interval=3, padding=8,
+        widget.GenPollText(
+            func=lambda: state.telemetry_label(state.telemetry()),
+            font=FONT, fontsize=11, foreground=C["text"],
+            background=C["dark"], padding=8, update_interval=15,
         ),
     ]
+    if which("checkupdates"):
+        children.append(
+            widget.CheckUpdates(
+                font=FONT, fontsize=11, distro="Arch_checkupdates",
+                display_format="UPD {updates}", no_update_string="UPD 0",
+                colour_have_updates=C["focus"],
+                colour_no_updates=C["inactive"],
+                background=C["dark"], update_interval=1800, padding=8,
+            )
+        )
+    return widget.WidgetBox(
+        widgets=children, font=FONT, fontsize=15,
+        background=C["dark"], foreground=C["color4"],
+        text_closed="󰅂", text_open="󰅀",
+        padding=9, close_button_location="left",
+        start_opened=False,
+    )
+
 
 def controls(primary):
     result = []
-    if primary and which("checkupdates"):
-        result.extend([
-            separator(),
-            widget.CheckUpdates(
-                font=FONT, fontsize=11,
-                distro="Arch_checkupdates",
-                display_format="UPD {updates}",
-                no_update_string="UPD 0",
-                colour_have_updates=C["focus"],
-                colour_no_updates=C["inactive"],
-                background=C["dark"],
-                update_interval=1800, padding=8,
-            ),
-        ])
     if primary:
         result.extend([
             separator(),
-            widget.Systray(
-                background=C["dark"], icon_size=17, padding=5,
-            ),
+            context_box(),
+            system_button(),
+            vpn_indicator(),
+            separator(),
+            widget.Systray(background=C["dark"], icon_size=17, padding=5),
         ])
     result.extend([
         separator(),
         widget.Clock(
             font=FONT, fontsize=12,
             format="%d/%m  %H:%M",
-            foreground=C["light"], background=C["dark"],
-            padding=11,
+            foreground=C["light"], background=C["dark"], padding=11,
         ),
     ])
     if primary:
         result.extend([
             action("󰔎", THEMES, foreground=C["color4"], size=16),
-            # Permanent clickable VPN icon (Nerd Fonts md-vpn, U+F0582).
-            # Uses the same action widget as the theme chooser.
-            action("󰖂", VPN, foreground=C["color4"], size=16),
             action("󰒃", BLACKARCH, foreground=C["focus"], size=16),
             action("⏻", POWER, foreground=C["focus"], size=18, padding=15),
         ])
     return result
 
+
 def build_widgets(primary=False, compact=False):
     items = [launcher(), space(8), *workspace_widgets()]
     if not compact:
         items.extend([separator(), *layout_status(), separator(), task_list()])
-        if primary:
-            items.extend([separator(), *telemetry()])
     else:
         # Narrow secondary monitors prioritize workspace switching over telemetry.
         items.append(widget.Spacer())
